@@ -1,0 +1,14 @@
+---
+
+# Based on https://doc.kerberos.io/2.0/installation/Docker
+
+# docker run --name=kerberos -p 10022:22 -p 10080:3000 -v /var/kerberos:/data kerberos/kerberos-rpi
+- name: "Run image {{ kerberos.image.name }}:{{ kerberos.image.tag }} as container {{ kerberos.container.name }}"
+  docker_container:
+    name: "{{ kerberos.container.name }}"
+    image: "{{ kerberos.image.name }}:{{ kerberos.image.tag }}"
+    published_ports:
+      - "{{ kerberos.container.ports.web }}:80"
+      - "{{ kerberos.container.ports.livestream }}:8889"
+    recreate: yes
+    state: started

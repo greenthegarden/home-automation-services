@@ -1,0 +1,58 @@
+---
+
+# sudo mkdir -p /var/www/web && sudo chown www-data:www-data /var/www/web
+- name: Create www location
+  become: yes
+  file:
+    path: /var/www/web
+    state: directory
+    owner: www-data
+    group: www-data
+
+# sudo -u www-data wget https://github.com/kerberos-io/web/releases/download/v2.5.1/web.tar.gz
+- name:
+  get_url:
+    dest: /tmp/web.tar.gz
+    url: https://github.com/kerberos-io/web/releases/download/v2.5.1/web.tar.gz
+
+- name: Extract /tmp/web.tar.gz into /var/www/web
+  become: yes
+  unarchive:
+    src: /tmp/web.tar.gz
+    dest: /var/www/web
+    remote_src: yes
+    owner: www-data
+    group: www-data
+
+  # sudo chown www-data -R storage bootstrap/cache config/kerberos.php
+# sudo chmod -R 775 storage bootstrap/cache
+- name: Set permissions
+  become: yes
+  file:
+    dest: "{{ item }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
+    mode: 0755
+  loop:
+    - /var/www/web/storage
+    - /var/www/seb/bootstrap/cache
+
+  # sudo chown www-data -R storage bootstrap/cache config/kerberos.php
+# sudo chmod 0600 config/kerberos.php
+- name: Set permissions
+  become: yes
+  file:
+    dest: "{{ item }}"
+    owner: www-data
+    group: www-data
+    mode: 0600
+  loop:
+    - /var/www/web/config/kerberos.php
+
+# sudo service nginx restart
+- name: Restart nginx service
+  become: yes
+  systemd:
+    name: nginx
+    state: restarted

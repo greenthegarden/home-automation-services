@@ -1,0 +1,11 @@
+---
+
+- hosts: local-system
+
+  tasks:
+
+    - import_role:
+        name: grafana
+        tasks_from: docker.yml
+      tags:
+        - grafana

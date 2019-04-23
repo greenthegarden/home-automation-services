@@ -1,0 +1,30 @@
+---
+
+# https://github.com/gogs/gogs/tree/master/docker
+
+- name: "Create local directory at {{ gogs.storage }} for data"
+  become: yes
+  file:
+    path: "{{ gogs.storage }}"
+    state: directory
+    mode: 0777
+
+# - set_fact:
+#     # image_name: "{{ gogs.image.name.rpi if (ansible_distribution == 'Raspbian') else gogs.image.name.linux }}"
+#     image_name: "{{ (ansible_distribution == 'Raspbian') | ternary( {{gogs.image.name.rpi}} , gogs.image.name.linux) }}"
+
+# - debug:
+#     var: image_name
+
+# docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs-rpi
+- name: "Run image {{ gogs.image.name }}:{{ gogs.image.tag }} as container {{ gogs.container.name }}"
+  docker_container:
+    name: "{{ gogs.container.name }}"
+    image: "{{ gogs.image.name }}:{{ gogs.image.tag }}"
+    published_ports:
+      - "{{ gogs.container.ports.https }}:22"
+      - "{{ gogs.container.ports.http }}:3000"
+    recreate: yes
+    state: started
+    volumes:
+      - "{{ gogs.storage }}:/data"

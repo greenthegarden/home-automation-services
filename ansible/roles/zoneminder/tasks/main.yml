@@ -1,0 +1,19 @@
+---
+
+- name: Set variables
+  set_fact:
+    distroname: ubuntu
+    distrorel: xenial
+    releasename: "1.32.3"
+
+- name: "Clone release {{ releasename }}"
+  git:
+    dest: /tmp/ZoneMinder
+    repo: https://github.com/ZoneMinder/ZoneMinder
+    version: "{{ releasename }}"
+    
+- name: Build
+  command: "OS={{ distroname }} DIST={{ distrorel }} utils/packpack/startpackpack.sh"
+  args:
+    chdir: /tmp/ZoneMinder
+    

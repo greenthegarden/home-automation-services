@@ -1,0 +1,39 @@
+---
+
+- name: Get source
+  git:
+    repo: "{{ frontail.project.src }}"
+    dest: "/tmp/frontail"
+    update: yes
+  register: frontail_source
+
+- name: Build image
+  docker_image:
+    path: /tmp/frontail
+    name: "{{ frontail.image.name }}"
+    tag: "{{ frontail.image.tag}}"
+  when: frontail_source.changed
+
+# docker run -d -P -v /var/log:/log mthenw/frontail /log/syslog
+# go to http://localhost:9001
+- name: "Run image {{ frontail.image.name }}:{{ frontail.image.tag }} as container {{ frontail.container.name }}"
+  docker_container:
+    name: "{{ frontail.container.name }}"
+    image: "{{ frontail.image.name }}:{{ frontail.image.tag }}"
+    command:
+      - /log/syslog
+    dns_servers:
+      - "{{ consul_server }}"
+    dns_search_domains:
+      - service.consul
+    hostname: "{{ frontail.container.name }}"
+    network_mode: host
+    published_ports:
+      - "{{ frontail.container.ports.http }}:9001"
+    recreate: yes
+    restart_policy: "{{ frontail.container.restart.policy }}"
+    state: started
+    volumes:
+      - /var/log:/log
+  register: frontail_container_launched
+  

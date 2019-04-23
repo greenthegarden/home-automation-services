@@ -1,0 +1,71 @@
+---
+
+# Create group
+- name: "Create system group {{ openhab.group.name }} with id {{ openhab.group.id }}"
+  become: yes
+  group:
+    name: "{{ openhab.group.name }}"
+    state: present
+    gid: "{{openhab.group.id }}"
+    system: yes
+
+# sudo useradd -r -s /sbin/nologin openhab
+- name: Create system user {{ openhab.user.name }} with id {{ openhab.user.id }}"
+  become: yes
+  user:
+    name: "{{ openhab.user.name }}"
+    create_home: no
+    group: "{{ openhab.group.name }}"
+    system: yes
+    shell: /sbin/nologin
+    uid: "{{ openhab.user.id }}"
+
+# usermod -a -G openhab <user>
+- name: "Add user {{ ansible_user }} to group {{ openhab.group.name }}"
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    groups: "{{ openhab.group.name }}"
+    append: yes
+
+# Create directories
+- name: "Create base directory {{ openhab.directories.base }}"
+  become: yes
+  file:
+    name: "{{ openhab.directories.base }}"
+    state: directory
+    owner: "{{ openhab.user.name }}"
+    group: "{{ openhab.group.name }}"
+    mode: 0755
+
+# Create data directories
+- name: Create data directories
+  become: yes
+  file:
+    name: "{{ openhab.directories.base }}/{{ item }}"
+    state: directory
+    owner: "{{ openhab.user.name }}"
+    group: "{{ openhab.group.name }}"
+    mode: 0755
+  loop: "{{ openhab.directories.data }}"
+
+# Clone configuration
+- name: "Clone configuration into {{ openhab.directories.base }}/conf"
+  become: yes
+  git:
+    repo: 'https://{{ github_user | urlencode }}:{{ github_password | urlencode }}@{{ openhab.configuration.repo }}'
+    # repo: 'https://github.com/greenthegarden/openhab2-configuration.git'
+    dest: "{{ openhab.directories.base }}/conf"
+    force: yes
+    update: yes
+  register: openhab_source
+  when: 0
+  
+- name: "Set permissions on {{ openhab.directories.base }}/conf"
+  become: yes
+  file:
+    dest: "{{ openhab.directories.base }}/conf"
+    owner: "{{ openhab.user.name }}"
+    group: "{{ openhab.group.name }}"
+    mode: 0755
+    recurse: yes

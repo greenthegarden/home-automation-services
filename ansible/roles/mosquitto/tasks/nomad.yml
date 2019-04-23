@@ -1,0 +1,10 @@
+---
+
+- name: Create job to /tmp
+  template:
+    src: mosquitto.nomad.j2
+    dest: /tmp/mosquitto.nomad
+
+- name: Run job
+  command: nomad job run /tmp/mosquitto.nomad
+  register: nomad_mosquitto_job_submitted

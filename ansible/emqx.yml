@@ -1,0 +1,28 @@
+---
+
+- hosts: hcnp-node-54 #local-system
+
+  tasks:
+
+
+    - import_role:
+        name: docker
+        tasks_from: modules.yml
+      tags:
+        - docker
+
+    - import_role:
+        name: portainer
+        tasks_from: container.yml
+      environment:
+        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+      tags:
+        - portainer
+
+    - import_role:
+        name: emqx
+        tasks_from: container.yml
+      environment:
+        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+      tags:
+        - emqx

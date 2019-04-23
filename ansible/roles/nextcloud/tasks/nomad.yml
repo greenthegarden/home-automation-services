@@ -1,0 +1,10 @@
+---
+
+- name: Copy job to /tmp
+  template:
+    src: nextcloud.nomad.j2
+    dest: /tmp/nextcloud.nomad
+
+- name: Run job
+  command: nomad job run /tmp/nextcloud.nomad
+  register: nomad_nextcloud_job_submitted

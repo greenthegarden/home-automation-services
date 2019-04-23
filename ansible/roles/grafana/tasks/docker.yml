@@ -1,0 +1,13 @@
+---
+
+# docker run -d -p 3000:3000 grafana/grafana
+- name: "Run image {{ grafana.image.name }}:{{ grafana.image.tag }} as service {{ grafana.service.name }}"
+  docker_container:
+    name: "{{ grafana.service.name }}"
+    image: "{{ grafana.image.name }}:{{ grafana.image.tag }}"
+    published_ports:
+      - "{{ grafana.service.ports.http }}:3000"
+    recreate: yes
+    state: started
+    # volumes:
+    #   - "{{ grafana.storage }}:/var/lib/grafana"

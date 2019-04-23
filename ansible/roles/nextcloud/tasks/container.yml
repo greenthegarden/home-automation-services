@@ -1,0 +1,12 @@
+---
+
+- name: Run nextcloud container
+  docker_container:
+    name: "{{ nextcloud.container.name }}"
+    image: "{{ nextcloud.image.name }}:{{ nextcloud.image.tag }}"
+    state: started
+    recreate: yes
+    published_ports:
+      - "{{ nextcloud.container.ports.http }}:80"
+    volumes:
+      - "{{ nextcloud.storage }}:/var/www/html"

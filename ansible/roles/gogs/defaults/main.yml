@@ -1,0 +1,19 @@
+---
+
+gogs_distribution_image_map:
+  debian: gogs
+  raspbian: 'gogs-rpi'
+  ubuntu: gogs
+gogs_image: "gogs/{{ gogs_distribution_image_map[ansible_distribution|lower] }}"
+
+gogs:
+  container:
+    name: gogs
+    ports:
+      http: 10080
+      https: 10022
+  image: 
+    name: "{{ gogs_image }}"
+    tag: latest
+  storage: "{{ storage_base }}/gogs"
+  

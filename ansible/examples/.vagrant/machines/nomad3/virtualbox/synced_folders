@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/philip/home-cloud-native-platform/ansible/roles/brianshumate.nomad/examples","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

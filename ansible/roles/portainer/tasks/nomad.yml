@@ -1,0 +1,16 @@
+---
+
+- name: Copy job to /tmp
+  copy:
+    src: portainer.nomad
+    dest: /tmp/portainer.nomad
+  when: 0
+
+- name: Copy job to /tmp
+  template:
+    src: portainer.nomad.j2
+    dest: /tmp/portainer.nomad
+
+- name: Run job
+  command: nomad job run /tmp/portainer.nomad
+  register: nomad_portainer_job_submitted

@@ -1,0 +1,15 @@
+---
+
+frontail:
+  image:
+    name: frontail
+    tag: latest
+  container:
+    name: frontail
+    ports:
+      http: 9001
+    restart:
+      policy: unless-stopped
+  project:
+    src: https://github.com/mthenw/frontail.git
+    url: https://github.com/mthenw/frontail

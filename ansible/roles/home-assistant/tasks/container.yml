@@ -1,0 +1,29 @@
+---
+
+# docker run -d --name="home-assistant" -v /PATH_TO_YOUR_CONFIG:/config -v /etc/localtime:/etc/localtime:ro --net=host homeassistant/home-assistant
+
+- set_fact:
+    homeassistant_image_name: "{{ homeassistant.image.name.rpi if (ansible_distribution == 'Raspbian') else homeassistant.image.name.linux }}"
+
+- debug:
+    var: homeassistant_image_name
+
+- name: "Run image {{ homeassistant_image_name }}:{{ homeassistant.image.tag }} as container {{ homeassistant.service.name }}"
+  docker_container:
+    name: "{{ homeassistant.service.name }}"
+    image: "{{ homeassistant_image_name }}:{{ homeassistant.image.tag }}"
+    network_mode: host
+    published_ports:
+        "{{ homeassistant.service.ports.http }}:8123"
+    recreate: yes
+    state: started
+    volumes:
+      - "{{ homeassistant.storage }}:/config"
+      - /etc/localtime:/etc/localtime:ro
+
+- name: "register {{ homeassistant.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ homeassistant.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+  with_dict: "{{ homeassistant.service.ports }}"
+  when: service_consul_running

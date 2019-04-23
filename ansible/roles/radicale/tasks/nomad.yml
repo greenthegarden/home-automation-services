@@ -1,0 +1,10 @@
+---
+
+- name: Copy job to /tmp
+  template:
+    src: radicale.nomad.j2
+    dest: /tmp/radicale.nomad
+
+- name: Run job
+  command: nomad job run /tmp/radicale.nomad
+  register: nomad_radicale_job_submitted

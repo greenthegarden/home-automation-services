@@ -1,0 +1,56 @@
+job "portainer" {
+
+  datacenters = ["dc1"]
+
+  group "node-management" {
+
+    count = 2
+
+    restart {
+      attempts = 3
+      delay    = "20s"
+      mode     = "delay"
+    }
+
+    task "portainer-container" {
+
+      driver = "docker"
+
+      config {
+        image = "{{ portainer.image.name }}:{{ portainer.image.tag }}"
+        args  = [ "--no-auth" ]
+        port_map {
+          http = "{{ portainer.service.ports.http }}"
+        }
+        volumes = [
+          "/var/run/docker.sock:/var/run/docker.sock",
+          "{{ portainer.storage }}:/data"
+        ]
+      }
+
+      service {
+        name = "{{ portainer.service.name }}"
+        port = "http"
+        tags = [
+          "traefik.enable=true"
+          ]
+        check {
+          type     = "http"
+          path     = "/"
+          interval = "10s"
+          timeout  = "2s"
+        }
+      }
+      
+      resources {
+        memory = 128
+        network {
+          port "http" {}
+        }
+      }
+
+    }
+
+  }
+
+}

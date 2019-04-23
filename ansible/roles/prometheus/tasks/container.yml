@@ -1,0 +1,24 @@
+---
+
+- name: Create configuration directory
+  file:
+    name: "{{ prometheus.storage }}"
+    state: directory
+
+- name: "Clone configuration into {{ prometheus.storage }}"
+  copy:
+    src:  prometheus.yml
+    dest: "{{ prometheus.storage }}/prometheus.yml"
+  
+- name: Run prometheus service
+  docker_container:
+    name: "{{ prometheus.service.name }}"
+    image: "{{ prometheus.image.name }}:{{ prometheus.image.tag }}"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    state: started
+    recreate: yes
+    published_ports:
+      - "{{ prometheus.service.ports.http }}:9090"
+    volumes:
+      - "{{ prometheus.storage }}/prometheus.yml:/etc/prometheus/prometheus.yml"

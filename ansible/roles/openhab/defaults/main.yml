@@ -1,0 +1,31 @@
+---
+
+openhab:
+  user:
+    name: openhab
+    id: 9001
+  group:
+    name: openhab
+    id: 9001
+  directories:
+    base: "{{ storage_base }}/openhab"
+    data: [
+      addons,
+      userdata
+    ]
+  configuration:
+    repo: 'github.com/greenthegarden/openhab2-configuration.git'
+  service:
+    name: openhab
+    ports:
+      http: 8888    # the HTTP port of the web interface
+      https: 8843   # the HTTPS port of the web interface
+      ssh: 8101     # the SSH port of the Console (since openHAB 2.0.0)
+      lsp: 5007     # the LSP port for validating rules (since openHAB 2.2.0)
+    restart:
+      policy: unless-stopped
+  image:
+    name: openhab/openhab
+    tag: latest
+
+# { name: 'testuser1', groups: 'wheel' }#

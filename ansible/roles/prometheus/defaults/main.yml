@@ -1,0 +1,13 @@
+---
+
+prometheus:
+  service:
+    name: prometheus
+    ports:
+      http: 9090
+    restart:
+      policy: always
+  image:
+    name: prom/prometheus
+    tag: v2.8.1
+  storage: "{{ storage_base }}/prometheus-storage"

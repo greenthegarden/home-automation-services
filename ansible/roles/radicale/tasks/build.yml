@@ -1,0 +1,15 @@
+---
+
+- name: Get source
+  git:
+    repo: "{{ radicale.project.src }}"
+    dest: "/tmp/radicale"
+    update: yes
+  register: radicale_source
+
+- name: Build image
+  docker_image:
+    path: /tmp/radicale
+    name: "{{ radicale.image.name }}"
+    tag: "{{ radicale.image.tag}}"
+  when: radicale_source.changed

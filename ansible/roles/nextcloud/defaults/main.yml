@@ -1,0 +1,13 @@
+---
+
+nextcloud:
+  service:
+    name: nextcloud
+    ports:
+      http: 80
+    restart:
+      policy: always
+  image:
+    name: nextcloud
+    tag: latest
+  storage: "{{ storage_base }}/nextcloud-storage"

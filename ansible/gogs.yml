@@ -1,0 +1,18 @@
+---
+
+- hosts: gogs-nodes
+
+  # remote_user: pi
+
+  # vars:
+  #    data_dir:            /var/nextcloud/data
+  #    # database:            "{{ DATABASE | default('sqlite') }}"
+  #    # mysql_root_password: "{{ MYSQL_ROOT_PASSWORD }}"
+  #    # ncuser_password:     "{{ NCUSER_PASSWORD }}"
+
+  roles:
+    # - common
+    # - consul
+    # - docker
+    # - git
+    - gogs

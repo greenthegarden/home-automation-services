@@ -1,0 +1,15 @@
+---
+
+homeassistant:
+  configuration:
+    repo: 'github.com/greenthegarden/home-assistant-configuration.git'
+  service:
+    name: home-assistant
+    ports:
+      http: 8123
+  image:
+    name:
+      linux: "homeassistant/home-assistant"
+      rpi: "homeassistant/raspberrypi3-homeassistant"
+    tag: latest
+  storage: "{{ storage_base }}/home-assistant"

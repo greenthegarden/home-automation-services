@@ -1,0 +1,28 @@
+---
+
+- hosts: rpi-home-network-nodes
+
+  tasks:
+
+    - import_role:
+        name: radicale
+        tasks_from: build.yml
+      tags:
+        - radicale
+        - build
+
+    - import_role:
+        name: radicale
+        tasks_from: configure.yml
+      tags:
+        - radicale
+        - configuration
+
+    - import_role:
+        name: radicale
+        tasks_from: nomad.yml
+      environment:
+        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+      tags:
+        - radicale
+        - services

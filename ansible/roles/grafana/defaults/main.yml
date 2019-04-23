@@ -1,0 +1,11 @@
+---
+
+grafana:
+  service:
+    name: grafana
+    ports:
+      http: 3000
+  image:
+    name: "grafana/grafana"
+    tag: 6.1.1
+  storage: "{{ storage_base }}/grafana"

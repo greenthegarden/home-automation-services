@@ -1,0 +1,37 @@
+---
+
+- name: Create a volume
+  docker_volume:
+    name: pihole_data
+
+- name: Create a volume
+  docker_volume:
+    name: pihole_dnsmasq
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+- name: "Run image {{ pihole.image.name }}:{{ pihole.image.tag }} as service {{ pihole.service.name }}"
+  docker_container:
+    name: "{{ pihole.service.name }}"
+    image: "{{ pihole.image.name }}:{{ pihole.image.tag }}"
+    published_ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    env:
+      TZ: 'Australia/Adelaide'
+      WEBPASSWORD: 'newt2k'
+    # Volumes store your data between container upgrades
+    volumes:
+       - 'pihole_data:/etc/pihole/'
+       - 'pihole_dnsmasq:/etc/dnsmasq.d/'
+    dns_servers:
+      - 127.0.0.1
+      - 1.1.1.1
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    capabilities:
+      - NET_ADMIN
+    restart_policy: unless-stopped
+    state: started

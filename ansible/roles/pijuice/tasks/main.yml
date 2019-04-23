@@ -1,0 +1,19 @@
+---
+
+# based on https://github.com/PiSupply/PiJuice
+
+- name: Install GUI version
+  become: yes
+  apt:
+    name: pijuice-gui
+    state: latest
+  register: installed_pijuice_gui
+  when: pijuice_version == 'gui'
+
+- name: Install Base version
+  become: yes
+  apt:
+    name: pijuice-base
+    state: latest
+  register: installed_pijuice_base
+  when: pijuice_version == 'base'

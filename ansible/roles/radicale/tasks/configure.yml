@@ -1,0 +1,23 @@
+---
+
+- name: Create directory for radicale configuration
+  file:
+    path: "{{ radicale.storage }}"
+    state: directory
+
+- name: Copy configuration files
+  copy:
+    dest: "{{ radicale.storage }}/{{ item }}"
+    src: "{{ item }}"
+    backup: yes
+  loop:
+    - config
+    - logging
+
+- name: Create directories for radicale data and logging
+  file:
+    path: "{{ radicale.storage }}/{{ item }}"
+    state: directory
+  loop:
+    - data
+    - logs

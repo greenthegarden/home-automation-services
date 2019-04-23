@@ -1,0 +1,112 @@
+---
+
+# Based on https://doc.kerberos.io/2.0/installation/Raspbian
+
+# sudo apt-get update && sudo apt-get install libav-tools libssl-dev
+- name: Update system and install libav-tools
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - libav-tools
+    - libssl-dev
+  
+- name: Set package details
+  set_fact:
+    kerberos_pkg_ver: 2.6.2
+    kerberos_pkg_name: kerberosio
+
+- name: Set pack detaile
+  set_fact:
+    kerberos_pkg: "rpi3-machinery-{{ kerberos_pkg_name }}-armhf-{{ kerberos_pkg_ver }}"
+
+- name: Set fact
+  set_fact:
+    kerberos_pkg_url: "https://github.com/kerberos-io/machinery/releases/download/v{{ kerberos_pkg_ver }}/{{ kerberos_pkg }}.deb"
+
+- name: "Check if kerberos_pkg is installed"
+  command: dpkg-query -W my_package
+  register: my_package_check_deb
+  failed_when: my_package_check_deb.rc > 1
+  changed_when: my_package_check_deb.rc == 1
+
+- name: "Download {{ kerberos_pkg }}"
+  get_url: 
+    dest: "/tmp/{{ kerberos_pkg }}.deb"
+    url: "{{ kerberos_pkg_url }}"
+  when: vagrant_check_deb.rc == 1
+
+- name: "Install {{ kerberos_pkg }}"
+  become: yes
+  apt:
+    deb: "/tmp/{{ kerberos_pkg }}.deb"
+  when: vagrant_check_deb.rc == 1
+
+# Set machinery to start on boot
+- name: Enable start at boot and start service
+  become: yes
+  systemd:
+    name: kerberosio
+    state: started
+    enabled: yes
+
+# Update the packages and kernel
+- name: Add repository into source list
+  become: yes
+  apt_repository:
+    repo: deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi
+    state: present
+
+#  sudo apt-get install -t stretch nginx php7.0 php7.0-curl php7.0-gd php7.0-fpm php7.0-cli php7.0-opcache php7.0-mbstring php7.0-xml php7.0-zip php7.0-mcrypt
+- name: Install nginx
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - nginx
+    - php7.0
+    - php7.0-curl
+    - php7.0-gd
+    - php7.0-fpm
+    - php7.0-cli
+    - php7.0-opcache
+    - php7.0-mbstring
+    - php7.0-xml
+    - php7.0-zip
+    - php7.0-mcrypt
+
+- name: Configure nginx
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  
+- name: Copy config
+  become: yes
+  copy:
+    dest: /etc/nginx/sites-enabled/kerberosio.conf
+    src: kerberosio.conf
+
+- name: Enable nginx service
+  become: yes
+  systemd:
+    name: nginx
+    enabled: yes
+
+- name: Set name of autoremove script
+  set_fact:
+    kerberos_autoremove_scipt: 'autoremoval.sh'
+
+- name: "Install kerberos autoremove script {{ kerberos_autoremove_scipt }}"
+  copy:
+    dest: "{{ ansible_user_dir }}/{{ kerberos_autoremove_scipt }}"
+    src: "{{ kerberos_autoremove_scipt }}"
+    mode: 0755
+
+- name: Create cron job
+  cron:
+    name: "kerberos autoremove"
+    minute: "*/15"
+    job: "/bin/bash {{ ansible_user_dir }}/{{ kerberos_autoremove_scipt }}"

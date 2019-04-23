@@ -1,0 +1,121 @@
+---
+
+- hosts: hcnp-nodes
+ 
+  vars:
+    ansible_version_minimum: '2.6.0'
+
+    deploy_nextcloud: no
+    deploy_openhab: yes
+    deploy_homeassistant: yes
+
+  vars_prompt:
+
+    - name: "github_user"
+      prompt: "Enter github username"
+      private: no
+      when: deploy_openhab or deplay_homeassistant
+
+    - name: "github_password"
+      prompt: "Enter github password"
+      private: yes
+      when: deploy_openhab or deplay_homeassistant
+
+  pre_tasks:
+
+    - name: "Check Ansible version"
+      assert:
+        that:
+          - ansible_version.full >= "{{ ansible_version_minimum }}"
+        fail_msg: "Ansible version > {{ ansible_version_minimum }} is required. Version {{ ansible_version.full }} is installed"
+        success_msg: "Using Ansible version {{ ansible_version.full }}"
+
+    - name: "Collect facts about system services"
+      service_facts:
+      register: services_state
+
+    - name: Debug
+      debug:
+        var: services_state
+        verbosity: 2
+
+    - name: "Check required services are running"
+      assert:
+        that:
+          - "ansible_facts.services['{{ item }}'].state == 'running'"
+        fail_msg: "{{ item }} is not running"
+        success_msg: "{{ item }} is running"
+      loop:
+        - consul.service
+        - docker.service
+
+    - name: "Set running services facts"
+      set_fact:
+        service_consul_running: yes
+        service_docker_running: yes
+
+    - name: "Ensure required modules are installed"
+      become: yes
+      pip:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python-consul
+        - docker
+
+  tasks:
+
+    - name: "Start EMQ-X"
+      import_role:
+        name: emqx
+        tasks_from: container.yml
+      tags:
+        - mqtt
+        - service
+
+    - name: "Start Nextcloud"
+      import_role:
+        name: nextcloud
+        tasks_from: container.yml
+      environment:
+        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+      tags:
+        - nextcloud
+        - service
+      when: deploy_nextcloud
+
+    - name: "Configure openHAB"
+      import_role:
+        name: openhab
+        tasks_from: configure.yml
+      tags:
+        - openhab
+        - configuration
+      when: deploy_openhab
+
+    - name: "Start openHAB"
+      import_role:
+        name: openhab
+        tasks_from: container.yml
+      tags:
+        - openhab
+        - service
+      when: deploy_openhab
+
+    - name: "Configure home-assistant"
+      import_role:
+        name: home-assistant
+        tasks_from: configure.yml
+      tags:
+        - homeassistant
+        - configuration
+      when: deploy_homeassistant
+
+    - name: "Start home-assistant"
+      import_role:
+        name: home-assistant
+        tasks_from: container.yml
+      tags:
+        - homeassistant
+        - service
+      when: deploy_homeassistant

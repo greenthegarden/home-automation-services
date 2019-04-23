@@ -1,0 +1,4 @@
+---
+
+- name: Run grafana
+  include_tasks: docker.yml

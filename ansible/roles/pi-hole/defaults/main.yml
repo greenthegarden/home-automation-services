@@ -1,0 +1,12 @@
+---
+
+pihole:
+  image:
+    name: 'pihole/pihole'
+    # tag: '4.2.2-1_armhf'
+    tag: '4.2.2-1'
+  service:
+    name: pihole
+    ports:
+      http: 9000
+  storage: portainer_data

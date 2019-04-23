@@ -1,0 +1,4 @@
+---
+
+# set pijuice version to be either base or gui
+pijuice_version: base

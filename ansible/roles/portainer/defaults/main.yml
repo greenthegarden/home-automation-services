@@ -1,0 +1,11 @@
+---
+
+portainer:
+  image:
+    name: 'portainer/portainer'
+    tag: '1.20.2'
+  service:
+    name: portainer
+    ports:
+      http: 9000
+  storage: portainer_data

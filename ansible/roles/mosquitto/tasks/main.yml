@@ -1,0 +1,19 @@
+---
+
+- name: Install packages
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  when: 0
+
+# https://hub.docker.com/_/eclipse-mosquitto
+# docker run -it -p 1883:1883 -p 9001:9001 -v mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto
+- name: "Run image {{ mosquitto.image.name }}:{{ mosquitto.image.tag }} as container {{ mosquitto.container.name }}"
+  docker_container:
+    name: "{{ mosquitto.container.name }}"
+    image: "{{ mosquitto.image.name }}:{{ mosquitto.image.tag }}"
+    published_ports:
+      - "{{ mosquitto.container.ports.http }}:1883"
+      - "{{ mosquitto.container.ports.https }}:9001"
+    recreate: yes
+    state: started

@@ -1,0 +1,17 @@
+---
+
+radicale:
+  project:
+    src: https://github.com/Kozea/Radicale
+    url: https://radicale.org/
+    version: master
+  service:
+    name: radicale
+    ports:
+      http: 5232
+    restart:
+      policy: always
+  image:
+    name: radicale
+    tag: latest
+  storage: "{{ storage_base }}/radicale"

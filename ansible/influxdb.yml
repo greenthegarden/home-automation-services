@@ -1,0 +1,16 @@
+---
+
+- hosts: influxdb-servers
+
+  # remote_user: pi
+
+  # vars:
+  #    nextcloud_dir:       /var/www/html/nextcloud
+  #    data_dir:            /var/nextcloud/data
+     # database:            "{{ DATABASE | default('sqlite') }}"
+     # mysql_root_password: "{{ MYSQL_ROOT_PASSWORD }}"
+     # ncuser_password:     "{{ NCUSER_PASSWORD }}"
+
+  roles:
+    - common
+    - influxdb

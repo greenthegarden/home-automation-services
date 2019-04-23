@@ -1,0 +1,6 @@
+---
+
+- name: Create directory for storage
+  file:
+    name: "{{ nextcloud.storage }}"
+    state: directory

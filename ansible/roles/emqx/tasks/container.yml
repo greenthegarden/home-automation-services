@@ -1,0 +1,30 @@
+---
+
+- set_fact:
+    emqx_image_tag: "{{ emqx.image.tag }}{{ emqx_machine_image_tag_map[ansible_machine|lower] }}"
+
+- debug:
+    var: emqx_machine_image_tag_map[ansible_machine|lower]
+
+- debug:
+    var: emqx_image_tag
+    
+# docker run --rm -ti --name emqx -p 18083:18083 -p 1883:1883 emqx:latest
+- name: "Run image {{ emqx.image.name }}:{{ emqx_image_tag }} as service {{ emqx.service.name }}"
+  docker_container:
+    name: "{{ emqx.service.name }}"
+    image: "{{ emqx.image.name }}:{{ emqx_image_tag }}"
+    published_ports:
+      - "{{ emqx.service.ports.http }}:18083"
+      - "{{ emqx.service.ports.mqtt }}:1883"
+    recreate: yes
+    restart_policy: "{{ emqx.service.restart.policy }}"
+    state: started
+  register: emqx_service_launched
+
+- name: "register {{ emqx.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ emqx.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+  with_dict: "{{ emqx.service.ports }}"
+  when: service_consul_running

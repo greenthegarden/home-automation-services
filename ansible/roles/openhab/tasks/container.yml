@@ -1,0 +1,45 @@
+---
+
+# docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs-rpi
+- name: "Run image {{ openhab.image.name }}:{{ openhab.image.tag }} as container {{ openhab.service.name }}"
+  docker_container:
+    name: "{{ openhab.service.name }}"
+    image: "{{ openhab.image.name }}:{{ openhab.image.tag }}"
+    detach: yes
+    env:
+      EXTRA_JAVA_OPTS: "-Duser.timezone=Australia/Adelaide"
+      USER_ID: "{{ openhab.user.id }}"
+      GROUP_ID: "{{ openhab.group.id }}"
+    # dns_servers:
+    #   - "{{ consul_server }}"
+    # dns_search_domains:
+    #   - service.consul
+    hostname: "{{ openhab.service.name }}"
+    interactive: yes
+    keep_volumes: yes
+    memory: 512m
+    network_mode: host  # needs to be host to support UPnP discorvery
+    published_ports:
+      - "{{ openhab.service.ports.http }}:8080"
+      - "{{ openhab.service.ports.https }}:8443"
+      - "{{ openhab.service.ports.ssh }}:8101"
+      - "{{ openhab.service.ports.lsp }}:5007"
+    # pull: true
+    recreate: yes
+    restart_policy: "{{ openhab.service.restart.policy }}"
+    state: started
+    tty: yes
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - "{{ openhab.directories.base }}/addons:/openhab/addons"
+      - "{{ openhab.directories.base }}/conf:/openhab/conf"
+      - "{{ openhab.directories.base }}/userdata:/openhab/userdata"
+  register: openhab_container_launched
+
+- name: "register {{ openhab.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ openhab.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+  with_dict: "{{ openhab.service.ports }}"
+  when: service_consul_running

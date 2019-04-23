@@ -1,0 +1,16 @@
+---
+
+packages: [
+  mosquitto
+]
+
+mosquitto:
+  service:
+    name: mosquitto
+    ports:
+      http: 1883
+      https: 9001
+  image:
+    name: eclipse-mosquitto
+    tag: latest
+  

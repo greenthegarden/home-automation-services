@@ -1,0 +1,20 @@
+---
+
+emqx_deb: https://www.emqx.io/downloads/edge/v3.1-beta.1/emqx-edge-raspbian9-v3.1-beta.1_armhf.deb
+emqx_zip: https://www.emqx.io/downloads/edge/v3.1-beta.1/emqx-edge-raspbian9-v3.1-beta.1.zip
+
+emqx_machine_image_tag_map:
+  armv7l: '-arm32v6'
+  x86_64: ''
+
+emqx:
+  service:
+    name: emqx
+    ports:
+      mqtt: 1883
+      http: 18083
+    restart:
+      policy: always
+  image:
+    name: emqx/emqx
+    tag: v3.0.0
