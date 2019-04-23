@@ -3,11 +3,5 @@
 		{
 			"path": "."
 		}
-	],
-	"settings": {
-		"terminal.integrated.env.linux": {
-			"PATH": "/home/philip/.platformio/penv/bin:/home/philip/.platformio/penv:/home/philip/.local/bin:/home/philip/bin:/usr/local/bin:/home/philip/gems/bin:/home/philip/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
-			"PLATFORMIO_CALLER": "vscode"
-		}
-	}
+	]
 }

@@ -1,7 +1,2 @@
-# ensure remote roles are not added to repo
-brianshumate.*/
-indigo-dc.*/
-cloudalchemy.*/
-
 #ensure ansible retry files are not added to repo
 *.retry
