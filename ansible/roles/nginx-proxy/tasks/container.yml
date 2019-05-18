@@ -1,0 +1,28 @@
+---
+
+- name: "Run image {{ nginx_proxy.image.name }}:{{ nginx_proxy.image.tag }} as service {{ nginx_proxy.container.name }}"
+  docker_container:
+    name: "{{ nginx_proxy.service.name }}"
+    image: "{{ nginx_proxy.image.name }}:{{ nginx_proxy.image.tag }}"
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy=true"
+    # dns_servers:
+    #   - "{{ consul_server }}"
+    # dns_search_domains:
+    #   - service.consul
+    # hostname: "{{ nginx_proxy.container.name }}"
+    # network_mode: host
+    networks:
+      - nextcloud_network
+    published_ports:
+      - "{{ nginx_proxy.service.ports.http }}:80"
+      - "{{ nginx_proxy.service.ports.https }}:443"
+    recreate: yes
+    restart_policy: "{{ nginx_proxy.service.restart.policy }}"
+    state: started
+    volumes:
+      - /etc/nginx/certs \
+      - /etc/nginx/vhost.d \
+      - /usr/share/nginx/html \
+      - /etc/localtime:/etc/localtime:ro \
+      - /var/run/docker.sock:/tmp/docker.sock:ro

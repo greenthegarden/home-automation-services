@@ -1,0 +1,17 @@
+---
+
+nginx_proxy:
+  project:
+    src: https://github.com/jwilder/nginx-proxy.git
+    url: 
+    version: master
+  service:
+    name: nginx-proxy
+    ports:
+      http: 80
+      https: 443
+    restart:
+      policy: always
+  image:
+    name: jwilder/nginx-proxy
+    tag: latest

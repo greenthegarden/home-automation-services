@@ -1,0 +1,10 @@
+---
+
+watchtower:
+  service:
+    name: watchtower
+    restart:
+      policy: always
+  image:
+    name: v2tec/watchtower
+    tag: 0.3.0

@@ -1,0 +1,15 @@
+---
+
+- name: Get source
+  git:
+    repo: "{{ lnpc.project.src }}"
+    dest: "/tmp/lnpc"
+    update: yes
+  register: lnpc_source
+
+- name: Build image
+  docker_image:
+    path: /tmp/lnpc
+    name: "{{ lnpc.image.name }}"
+    tag: "{{ lnpc.image.tag }}"
+  when: lnpc_source.changed

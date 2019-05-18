@@ -1,6 +1,6 @@
 ---
 
-- hosts: local-system # rpi-home-network-nodes
+- hosts: hcnp_nodes
 
   tasks:
 

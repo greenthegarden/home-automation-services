@@ -1,6 +1,6 @@
 ---
 
-- hosts: rpi-home-network-nodes
+- hosts: hcnp_nodes
 
   tasks:
 
@@ -20,7 +20,7 @@
 
     - import_role:
         name: radicale
-        tasks_from: nomad.yml
+        tasks_from: container.yml
       environment:
         NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
       tags:

@@ -11,5 +11,5 @@
   docker_image:
     path: /tmp/radicale
     name: "{{ radicale.image.name }}"
-    tag: "{{ radicale.image.tag}}"
+    tag: "{{ radicale.image.tag }}"
   when: radicale_source.changed

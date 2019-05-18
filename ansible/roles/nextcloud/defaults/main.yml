@@ -1,6 +1,10 @@
 ---
 
 nextcloud:
+  user:
+    name: nextcloud
+  group:
+    name: nextcloud
   service:
     name: nextcloud
     ports:
@@ -10,4 +14,11 @@ nextcloud:
   image:
     name: nextcloud
     tag: latest
-  storage: "{{ storage_base }}/nextcloud-storage"
+  storage:
+    base: "{{ storage_base }}/nextcloud_storage"
+    directories: [
+      config,
+      custom_apps,
+      data,
+      themes
+    ]

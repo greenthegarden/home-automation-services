@@ -14,7 +14,8 @@
     dest: "{{ homeassistant.storage }}"
     update: yes
   register: homeassistant_source
-  
+  when: homeassistant_configuration_clone
+
 - name: "Set permissions on {{ homeassistant.storage }}"
   become: yes
   file:

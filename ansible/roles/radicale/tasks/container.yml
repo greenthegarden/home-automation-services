@@ -1,8 +1,8 @@
 ---
 
-- name: "Run image {{ radicale.image.name }}:{{ radicale.image.tag }} as container {{ radicale.container.name }}"
+- name: "Run image {{ radicale.image.name }}:{{ radicale.image.tag }} as service {{ radicale.service.name }}"
   docker_container:
-    name: "{{ radicale.container.name }}"
+    name: "{{ radicale.service.name }}"
     image: "{{ radicale.image.name }}:{{ radicale.image.tag }}"
     # dns_servers:
     #   - "{{ consul_server }}"
@@ -11,9 +11,9 @@
     # hostname: "{{ radicale.container.name }}"
     # network_mode: host
     published_ports:
-      - "{{ radicale.container.ports.http }}:5232"
+      - "{{ radicale.service.ports.http }}:5232"
     recreate: yes
-    restart_policy: "{{ radicale.container.restart.policy }}"
+    restart_policy: "{{ radicale.service.restart.policy }}"
     state: started
     volumes:
       - "{{ radicale.storage }}/config:/etc/radicale"

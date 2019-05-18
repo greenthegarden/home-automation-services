@@ -1,6 +1,57 @@
 ---
 
-- name: Create directory for storage
+# Create group
+- name: "Create system group {{ nextcloud.group.name }} with id {{ nextcloud.group.id }}"
+  become: yes
+  group:
+    name: "{{ nextcloud.group.name }}"
+    state: present
+    system: yes
+
+# sudo useradd -r -s /sbin/nologin nextcloud
+- name: Create system user {{ nextcloud.user.name }} with id {{ nextcloud.user.id }}"
+  become: yes
+  user:
+    name: "{{ nextcloud.user.name }}"
+    create_home: no
+    group: "{{ nextcloud.group.name }}"
+    system: yes
+    shell: /sbin/nologin
+
+# usermod -a -G nextcloud <user>
+- name: "Add user {{ ansible_user }} to group {{ nextcloud.group.name }}"
+  become: yes
+  user:
+    name: "{{ ansible_user }}"
+    groups: "{{ nextcloud.group.name }}"
+    append: yes
+
+# Create base storage directory
+- name: "Create base storage directory {{ nextcloud.storage.base }}"
+  become: yes
   file:
-    name: "{{ nextcloud.storage }}"
+    name: "{{ nextcloud.storage.base }}"
     state: directory
+    owner: "{{ nextcloud.user.name }}"
+    group: "{{ nextcloud.group.name }}"
+    mode: 0755
+
+# Create storage directories
+- name: Create storage directories
+  become: yes
+  file:
+    name: "{{ nextcloud.storage.base }}/{{ item }}"
+    state: directory
+    owner: "{{ nextcloud.user.name }}"
+    group: "{{ nextcloud.group.name }}"
+    mode: 0755
+  loop: "{{ nextcloud.storage.directories }}"
+  
+- name: "Set permissions on {{ nextcloud.directories.base }}"
+  become: yes
+  file:
+    dest: "{{ nextcloud.storage.base }}"
+    owner: "{{ nextcloud.user.name }}"
+    group: "{{ nextcloud.group.name }}"
+    mode: 0755
+    recurse: yes

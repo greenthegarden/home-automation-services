@@ -1,0 +1,10 @@
+---
+
+mariadb:
+  service:
+    name: mariadb
+    restart:
+      policy: always
+  image:
+    name: mariadb
+    tag: latest

@@ -1,0 +1,19 @@
+---
+
+- hosts: hcnp_nodes
+
+  tasks:
+
+    - import_role:
+        name: nginx-proxy
+        tasks_from: build
+      tags:
+        - nginx
+        - build
+
+    - import_role:
+        name: letsencrypt-nginx-proxy-companion
+        tasks_from: build
+      tags:
+        - nginx
+        - build

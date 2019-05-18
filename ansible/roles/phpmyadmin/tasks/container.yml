@@ -1,0 +1,15 @@
+---
+
+- name: "Run image {{ phpmyadmin.image.name }}:{{ phpmyadmin.image.tag }} as service {{ phpmyadmin.service.name }}"
+  docker_container:
+    name: "{{ phpmyadmin.service.name }}"
+    image: "{{ phpmyadmin.image.name }}:{{ phpmyadmin.image.tag }}"
+    env:
+      PMA_ARBITRARY: '1'
+      # MYSQL_ROOT_
+    networks:
+      - name: "{{ nextcloud_network }}"
+    published_ports:
+      - "{{ phpmyadmin.service.ports.http }}:80"
+    recreate: yes
+    state: started

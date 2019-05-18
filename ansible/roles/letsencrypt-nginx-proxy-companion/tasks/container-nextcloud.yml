@@ -1,0 +1,22 @@
+---
+
+- name: "Run image {{ lnpc.image.name }}:{{ lnpc.image.tag }} as service {{ lnpc.service.name }}"
+  docker_container:
+    name: "{{ lnpc.service.name }}"
+    image: "{{ lnpc.image.name }}:{{ lnpc.image.tag }}"
+    # dns_servers:
+    #   - "{{ consul_server }}"
+    # dns_search_domains:
+    #   - service.consul
+    # hostname: "{{ lnpc.service.name }}"
+    # network_mode: host
+    networks:
+      - name: "{{ nextcloud_network }}"
+    recreate: yes
+    restart_policy: "{{ lnpc.service.restart.policy }}"
+    state: started
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    volumes_from:
+      - nextcloud-proxy

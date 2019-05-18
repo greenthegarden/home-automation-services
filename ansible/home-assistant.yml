@@ -1,6 +1,6 @@
 ---
 
-- hosts: hcnp-nodes
+- hosts: hcnp_nodes
 
   tasks:
 

@@ -1,0 +1,12 @@
+---
+
+phpmyadmin:
+  service:
+    name: phpmyadmin
+    ports:
+      http: 88
+    restart:
+      policy: always
+  image:
+    name: phpmyadmin/phpmyadmin
+    tag: 4.8.5

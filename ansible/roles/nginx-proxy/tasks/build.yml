@@ -1,0 +1,15 @@
+---
+
+- name: Get source
+  git:
+    repo: "{{ nginx_proxy.project.src }}"
+    dest: "/tmp/nginx_proxy"
+    update: yes
+  register: nginx_proxy_source
+
+- name: Build image
+  docker_image:
+    path: /tmp/nginx_proxy
+    name: "{{ nginx_proxy.image.name }}"
+    tag: "{{ nginx_proxy.image.tag }}"
+  when: nginx_proxy_source.changed

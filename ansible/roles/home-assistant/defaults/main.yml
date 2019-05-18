@@ -13,3 +13,5 @@ homeassistant:
       rpi: "homeassistant/raspberrypi3-homeassistant"
     tag: latest
   storage: "{{ storage_base }}/home-assistant"
+
+homeassistant_configuration_clone: yes

@@ -59,7 +59,6 @@
     force: yes
     update: yes
   register: openhab_source
-  when: 0
   
 - name: "Set permissions on {{ openhab.directories.base }}/conf"
   become: yes

@@ -1,0 +1,14 @@
+---
+
+lnpc:
+  project:
+    src: https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion.git
+    url: 
+    version: master
+  service:
+    name: nginx-proxy-letsencrypt
+    restart:
+      policy: always
+  image:
+    name: jrcs/letsencrypt-nginx-proxy-companion
+    tag: latest

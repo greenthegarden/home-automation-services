@@ -1,7 +1,6 @@
 ---
 
-# Run up Cadvisor
-- hosts: local-system
+- hosts: hcnp_nodes
 
   tasks:
 

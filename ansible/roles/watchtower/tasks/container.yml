@@ -1,0 +1,13 @@
+---
+
+- name: "Run image {{ watchtower.image.name }}:{{ watchtower.image.tag }} as service {{ watchtower.service.name }}"
+  docker_container:
+    name: "{{ watchtower.service.name }}"
+    image: "{{ watchtower.image.name }}:{{ watchtower.image.tag }}"
+    command:
+      - --schedule "0 0 23 * * SUN"
+      - --cleanup
+    recreate: yes
+    state: started
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

@@ -1,25 +1,33 @@
 ---
 
-- hosts: hcnp-nodes
+- hosts: hcnp_nodes
  
+  environment:
+    TZ: "Australia/Adelaide"
+    DOMAINNAME: "greenthegarden.io"
+
   vars:
     ansible_version_minimum: '2.6.0'
 
+    deploy_radicale: yes
+    deploy_emqx: yes
     deploy_nextcloud: no
     deploy_openhab: yes
-    deploy_homeassistant: yes
+    deploy_homeassistant: no
+
+    homeassistant_configuration_clone: no
 
   vars_prompt:
 
     - name: "github_user"
       prompt: "Enter github username"
       private: no
-      when: deploy_openhab or deplay_homeassistant
+      when: homeassistant_configuration_clone
 
     - name: "github_password"
       prompt: "Enter github password"
       private: yes
-      when: deploy_openhab or deplay_homeassistant
+      when: homeassistant_configuration_clone
 
   pre_tasks:
 
@@ -72,6 +80,25 @@
       tags:
         - mqtt
         - service
+      when: deploy_emqx
+
+    - name: "Configure Radicale"
+      import_role:
+        name: radicale
+        tasks_from: configure.yml
+      tags:
+        - calendar
+        - service
+      when: deploy_radicale
+      
+    - name: "Start Radicale"
+      import_role:
+        name: radicale
+        tasks_from: container.yml
+      tags:
+        - calendar
+        - service
+      when: deploy_radicale
 
     - name: "Start Nextcloud"
       import_role:

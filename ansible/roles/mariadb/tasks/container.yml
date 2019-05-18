@@ -1,0 +1,18 @@
+---
+
+- name: "Run image {{ mariadb.image.name }}:{{ mariadb.image.tag }} as service {{ mariadb.service.name }}"
+  docker_container:
+    name: "{{ mariadb.service.name }}"
+    image: "{{ mariadb.image.name }}:{{ mariadb.image.tag }}"
+    env:
+      MYSQL_ROOT_PASSWORD: 'secret'
+      MYSQL_PASSWORD: 'mysql'
+      MYSQL_DATABASE: 'nextcloud'
+      MYSQL_USER: 'nextcloud'
+    networks:
+      - name: "{{ nextcloud_network }}"
+    recreate: yes
+    state: started
+    volumes:
+      - db:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro

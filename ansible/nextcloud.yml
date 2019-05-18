@@ -1,19 +1,49 @@
 ---
 
-- hosts: rpi-home-network-nodes
+- hosts: hcnp_nodes
+
+
+  vars:
+    nextcloud_network: nextcloud_network
 
   tasks:
 
+
+    # - name: "Create nextcloud network"
+    #   docker_network:
+    #     name: "{{ nextcloud_network }}"
+      
+    # - import_role:
+    #     name: nginx-proxy
+    #     tasks_from: container-nextcloud
+    #   tags:
+    #     - nginx
+    #     - services
+
+    # - import_role:
+    #     name: letsencrypt-nginx-proxy-companion
+    #     tasks_from: container-nextcloud
+    #   tags:
+    #     - nginx
+    #     - services
+
+    # - import_role:
+    #     name: mariadb
+    #     tasks_from: container
+    #   tags:
+    #     - nginx
+    #     - services
+        
     - import_role:
         name: nextcloud
-        tasks_from: configure.yml
+        tasks_from: configure
       tags:
         - nextcloud
         - configuration
 
     - import_role:
         name: nextcloud
-        tasks_from: nomad.yml
+        tasks_from: container
       environment:
         NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
       tags:
