@@ -1,0 +1,39 @@
+---
+
+- hosts: camera_server_instances
+
+  vars:
+    ansible_version_minimum: '2.6.0'
+
+  pre_tasks:
+
+    - name: "Check Ansible version"
+      assert:
+        that:
+          - ansible_version.full >= "{{ ansible_version_minimum }}"
+        fail_msg: "Ansible version > {{ ansible_version_minimum }} is required. Version {{ ansible_version.full }} is installed"
+        success_msg: "Using Ansible version {{ ansible_version.full }}"
+
+  tasks:
+
+    - import_role:
+        name: kerberos
+        tasks_from: install-rpi-machinery.yml
+      tags:
+        - kerberos
+        - installation
+        
+    - import_role:
+        name: kerberos
+        tasks_from: install-nginx-php.yml
+      tags:
+        - kerberos
+        - installation
+        
+    - import_role:
+        name: kerberos
+        tasks_from: install-web-frontend.yml
+      tags:
+        - kerberos
+        - installation
+        

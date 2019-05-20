@@ -20,11 +20,10 @@ all:
     #   ansible_connection: ssh
     #   ansible_host: 192.168.1.53
     #   ansible_user: pi
-    hcnp-node-54:
-      ansible_connection: ssh
-      # ansible_host: 192.168.1.54
-      ansible_host: 192.168.1.8
-      ansible_user: pi
+    # hcnp-node-54:
+    #   ansible_connection: ssh
+    #   ansible_host: 192.168.1.54
+    #   ansible_user: pi
     # hcnp-node-55:
     #   ansible_connection: ssh
     #   ansible_host: 192.168.1.55
@@ -34,10 +33,10 @@ all:
     #   ansible_host: localhost
     #   ansible_user: philip
     #   consul_mode: server
-    # camera-test:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.1.5
-    #   ansible_user: pi
+    camera-server:
+      ansible_connection: ssh
+      ansible_host: 192.168.1.8
+      ansible_user: pi
     # wb-node-48:
     #   ansible_connection: ssh
     #   ansible_host: 192.168.100.48
@@ -54,7 +53,12 @@ all:
         # hcnp-node-53:
         hcnp-node-54:
         # hcnp-node-55:
+        
 
     emqx_instances:
       hosts:
         hcnp-node-54:
+      
+    camera_server_instances:
+      hosts:
+        camera-server:

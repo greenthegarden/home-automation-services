@@ -9,3 +9,11 @@ kerberos:
   image:
     name: "kerberos/kerberos"
     tag: latest
+
+kerberosio_machinery_pkg_ver: 2.6.2
+kerberosio_machinery_pkg_name: kerberosio
+kerberosio_service_name: kerberosio
+
+kerberosio_pkg_installed: no
+
+kerberosio_web_ver: 2.5.1

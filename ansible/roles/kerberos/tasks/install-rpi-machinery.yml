@@ -1,0 +1,78 @@
+---
+
+# Based on https://doc.kerberos.io/2.0/installation/Raspbian
+
+# sudo apt-get update && sudo apt-get install libav-tools libssl-dev
+- name: Update system and install libav-tools
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - libav-tools
+    - libssl-dev
+
+- name: "Check if {{ kerberosio_machinery_pkg_name }} is installed"
+  command: "dpkg-query -W {{ kerberosio_machinery_pkg_name }}"
+  register: kerberosio_check_deb
+#   failed_when: kerberosio_check_deb.rc > 1
+#   changed_when: kerberosio_check_deb.rc == 1
+
+- debug:
+    var: kerberosio_check_deb
+    
+- name: Set package installed
+  set_fact:
+     kerberosio_pkg_installed: yes
+  when: not kerberosio_check_deb.failed
+
+- debug:
+    var: kerberosio_pkg_installed
+
+- name: Set package details
+  set_fact:
+    kerberosio_machinery_pkg: "rpi3-machinery-{{ kerberosio_machinery_pkg_name }}-armhf-{{ kerberosio_machinery_pkg_ver }}"
+  when: not kerberosio_pkg_installed
+
+- name: Set fact
+  set_fact:
+    kerberosio_machinery_pkg_url: "https://github.com/kerberos-io/machinery/releases/download/v{{ kerberosio_machinery_pkg_ver }}/{{ kerberosio_machinery_pkg }}.deb"
+  when: not kerberosio_pkg_installed
+
+- name: "Download {{ kerberosio_machinery_pkg }}"
+  get_url: 
+    dest: "/tmp/{{ kerberosio_machinery_pkg }}.deb"
+    url: "{{ kerberosio_machinery_pkg_url }}"
+  when: not kerberosio_pkg_installed
+
+- name: "Install {{ kerberosio_machinery_pkg }}"
+  become: yes
+  apt:
+    deb: "/tmp/{{ kerberosio_machinery_pkg }}.deb"
+  when: not kerberosio_pkg_installed
+
+# Set machinery to start on boot
+- name: "Enable service {{ kerberosio_service_name }} to start at boot and start service"
+  become: yes
+  systemd:
+    name: "{{ kerberosio_service_name }}"
+    state: started
+    enabled: yes
+
+# install autoremove script
+
+- name: Set name of autoremove script
+  set_fact:
+    kerberosio_autoremove_scipt: 'autoremoval.sh'
+
+- name: "Install kerberos autoremove script {{ kerberosio_autoremove_scipt }}"
+  copy:
+    dest: "{{ ansible_user_dir }}/{{ kerberosio_autoremove_scipt }}"
+    src: "{{ kerberosio_autoremove_scipt }}"
+    mode: 0755
+
+- name: Create cron job
+  cron:
+    name: "kerberos autoremove"
+    minute: "*/15"
+    job: "/bin/bash {{ ansible_user_dir }}/{{ kerberosio_autoremove_scipt }}"
