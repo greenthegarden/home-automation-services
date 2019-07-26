@@ -9,7 +9,15 @@
   copy:
     src:  prometheus.yml
     dest: "{{ prometheus.storage }}/prometheus.yml"
-  
+
+- name: "deregister {{ prometheus.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ prometheus.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ prometheus.service.ports }}"
+  when: service_consul_running
+
 - name: Run prometheus service
   docker_container:
     name: "{{ prometheus.service.name }}"
@@ -22,3 +30,11 @@
       - "{{ prometheus.service.ports.http }}:9090"
     volumes:
       - "{{ prometheus.storage }}/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+- name: "register {{ prometheus.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ prometheus.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: present
+  with_dict: "{{ prometheus.service.ports }}"
+  when: service_consul_running

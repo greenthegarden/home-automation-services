@@ -1,14 +1,29 @@
 ---
 
 - hosts: hcnp_nodes
+ 
+  environment:
+    TZ: "Australia/Adelaide"
+    DOMAINNAME: "greenthegarden.io"
 
   vars:
     ansible_version_minimum: '2.6.0'
 
-    run_configuration: no
+    deploy_radicale: no
+    deploy_emqx: yes
+    deploy_openhab: yes
+ 
+  vars_prompt:
 
-    service_consul_running: no
-    service_docker_running: no
+    - name: "github_user"
+      prompt: "Enter github username"
+      private: no
+      when: homeassistant_configuration_clone
+
+    - name: "github_password"
+      prompt: "Enter github password"
+      private: yes
+      when: homeassistant_configuration_clone
 
   pre_tasks:
 
@@ -35,12 +50,12 @@
         fail_msg: "{{ item }} is not running"
         success_msg: "{{ item }} is running"
       loop:
-        # - consul.service
+        - consul.service
         - docker.service
 
     - name: "Set running services facts"
       set_fact:
-        # service_consul_running: yes
+        service_consul_running: yes
         service_docker_running: yes
 
     - name: "Ensure required modules are installed"
@@ -52,30 +67,49 @@
         - python-consul
         - docker
 
-  vars_prompt:
-
-    - name: "github_user"
-      prompt: "Enter github username"
-      private: no
-
-    - name: "github_password"
-      prompt: "Enter github password"
-      private: yes
-
   tasks:
 
-    - import_role:
+    - name: "Start EMQ-X"
+      import_role:
+        name: emqx
+        tasks_from: container.yml
+      tags:
+        - mqtt
+        - service
+      when: deploy_emqx
+
+    - name: "Configure Radicale"
+      import_role:
+        name: radicale
+        tasks_from: configure.yml
+      tags:
+        - calendar
+        - service
+      when: deploy_radicale
+      
+    - name: "Start Radicale"
+      import_role:
+        name: radicale
+        tasks_from: container.yml
+      tags:
+        - calendar
+        - service
+      when: deploy_radicale
+
+    - name: "Configure openHAB"
+      import_role:
         name: openhab
         tasks_from: configure.yml
       tags:
         - openhab
         - configuration
-      when: run_configuration
+      when: deploy_openhab
 
-    - import_role:
+    - name: "Start openHAB"
+      import_role:
         name: openhab
         tasks_from: container.yml
       tags:
         - openhab
-        - services
-        
+        - service
+      when: deploy_openhab

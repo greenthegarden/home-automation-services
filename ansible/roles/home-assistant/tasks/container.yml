@@ -8,6 +8,14 @@
 - debug:
     var: homeassistant_image_name
 
+- name: "deregister {{ homeassistant.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ homeassistant.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ homeassistant.service.ports }}"
+  when: service_consul_running
+
 - name: "Run image {{ homeassistant_image_name }}:{{ homeassistant.image.tag }} as container {{ homeassistant.service.name }}"
   docker_container:
     name: "{{ homeassistant.service.name }}"
@@ -25,5 +33,6 @@
   consul:
     service_name: "{{ homeassistant.service.name }}-{{ item.value }}"
     service_port: "{{ item.value }}"
+    state: present
   with_dict: "{{ homeassistant.service.ports }}"
   when: service_consul_running

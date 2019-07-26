@@ -9,6 +9,14 @@
 - debug:
     var: emqx_image_tag
     
+- name: "deregister {{ emqx.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ emqx.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ emqx.service.ports }}"
+  when: service_consul_running
+  
 # docker run --rm -ti --name emqx -p 18083:18083 -p 1883:1883 emqx:latest
 - name: "Run image {{ emqx.image.name }}:{{ emqx_image_tag }} as service {{ emqx.service.name }}"
   docker_container:
@@ -26,5 +34,6 @@
   consul:
     service_name: "{{ emqx.service.name }}-{{ item.value }}"
     service_port: "{{ item.value }}"
+    state: present
   with_dict: "{{ emqx.service.ports }}"
   when: service_consul_running

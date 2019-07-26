@@ -1,5 +1,13 @@
 ---
 
+- name: "deregister {{ portainer.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ portainer.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ portainer.service.ports }}"
+  when: service_consul_running
+
 # https://www.portainer.io/installation/
 # docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 - name: "Run image {{ portainer.image.name }}:{{ portainer.image.tag }} as service {{ portainer.service.name }}"
@@ -20,5 +28,6 @@
   consul:
     service_name: "{{ portainer.service.name }}-{{ item.value }}"
     service_port: "{{ item.value }}"
+    state: present
   with_dict: "{{ portainer.service.ports }}"
   when: service_consul_running

@@ -1,5 +1,13 @@
 ---
 
+- name: "deregister {{ openhab.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ openhab.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ openhab.service.ports }}"
+  when: service_consul_running
+
 # docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs-rpi
 - name: "Run image {{ openhab.image.name }}:{{ openhab.image.tag }} as container {{ openhab.service.name }}"
   docker_container:
@@ -41,5 +49,6 @@
   consul:
     service_name: "{{ openhab.service.name }}-{{ item.value }}"
     service_port: "{{ item.value }}"
+    state: present
   with_dict: "{{ openhab.service.ports }}"
   when: service_consul_running

@@ -16,6 +16,14 @@
 # - debug:
 #     var: image_name
 
+- name: "deregister {{ emqx.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ emqx.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ emqx.service.ports }}"
+  when: service_consul_running
+  
 # docker run --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs-rpi
 - name: "Run image {{ gogs.image.name }}:{{ gogs.image.tag }} as container {{ gogs.container.name }}"
   docker_container:
@@ -28,3 +36,12 @@
     state: started
     volumes:
       - "{{ gogs.storage }}:/data"
+
+- name: "register {{ emqx.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ emqx.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ emqx.service.ports }}"
+  when: service_consul_running
+  

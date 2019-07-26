@@ -17,4 +17,4 @@ emqx:
       policy: always
   image:
     name: emqx/emqx
-    tag: v3.1.1
+    tag: v3.2.1

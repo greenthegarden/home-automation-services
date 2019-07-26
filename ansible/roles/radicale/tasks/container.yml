@@ -1,5 +1,13 @@
 ---
 
+- name: "deregister {{ radicale.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ radicale.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ radicale.service.ports }}"
+  when: service_consul_running
+
 - name: "Run image {{ radicale.image.name }}:{{ radicale.image.tag }} as service {{ radicale.service.name }}"
   docker_container:
     name: "{{ radicale.service.name }}"
@@ -19,3 +27,11 @@
       - "{{ radicale.storage }}/config:/etc/radicale"
       - "{{ radicale.storage }}/data:/var/lib/radicale"
       - "{{ radicale.storage }}/logs:/var/log/radicale"
+
+- name: "register {{ radicale.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ radicale.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: present
+  with_dict: "{{ radicale.service.ports }}"
+  when: service_consul_running

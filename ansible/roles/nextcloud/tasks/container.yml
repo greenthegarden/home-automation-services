@@ -1,5 +1,13 @@
 ---
 
+- name: "deregister {{ nextcloud.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ nextcloud.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ nextcloud.service.ports }}"
+  when: service_consul_running
+
 - name: "Run image {{ nextcloud.image.name }}:{{ nextcloud.image.tag }} as service {{ nextcloud.service.name }}"
   docker_container:
     name: "{{ nextcloud.service.name }}"
@@ -22,3 +30,11 @@
       - "{{ nextcloud.storage }}/themes:/var/www/html/themes"
       - /etc/localtime:/etc/localtime:ro
       - "{{ nextcloud.storage }}:/var/www/html"
+
+- name: "register {{ nextcloud.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ nextcloud.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: present
+  with_dict: "{{ nextcloud.service.ports }}"
+  when: service_consul_running

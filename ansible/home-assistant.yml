@@ -2,6 +2,22 @@
 
 - hosts: hcnp_nodes
 
+  vars:
+
+    - homeassistant_configuration_clone: yes
+
+  vars_prompt:
+
+    - name: github_user
+      prompt: "What is your Github username?"
+      private: no
+      when: homeassistant_configuration_clone
+
+    - name: github_password
+      prompt: "What is your Github password?"
+      when: homeassistant_configuration_clone
+
+  
   tasks:
 
     - import_role:

@@ -1,5 +1,13 @@
 ---
 
+- name: "deregister {{ grafana.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ grafana.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: absent
+  with_dict: "{{ grafana.service.ports }}"
+  when: service_consul_running
+  
 # docker run -d -p 3000:3000 grafana/grafana
 - name: "Run image {{ grafana.image.name }}:{{ grafana.image.tag }} as service {{ grafana.service.name }}"
   docker_container:
@@ -11,3 +19,12 @@
     state: started
     # volumes:
     #   - "{{ grafana.storage }}:/var/lib/grafana"
+
+- name: "register {{ grafana.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ grafana.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: present
+  with_dict: "{{ grafana.service.ports }}"
+  when: service_consul_running
+  
