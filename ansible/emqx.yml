@@ -2,50 +2,11 @@
 
 - hosts: emqx_instances
 
-  vars:
-    ansible_version_minimum: '2.6.0'
-
   pre_tasks:
 
-    - name: "Check Ansible version"
-      assert:
-        that:
-          - ansible_version.full >= "{{ ansible_version_minimum }}"
-        fail_msg: "Ansible version > {{ ansible_version_minimum }} is required. Version {{ ansible_version.full }} is installed"
-        success_msg: "Using Ansible version {{ ansible_version.full }}"
-
-    - name: "Collect facts about system services"
-      service_facts:
-      register: services_state
-
-    - name: Debug
-      debug:
-        var: services_state
-        verbosity: 2
-
-    - name: "Check required services are running"
-      assert:
-        that:
-          - "ansible_facts.services['{{ item }}'].state == 'running'"
-        fail_msg: "{{ item }} is not running"
-        success_msg: "{{ item }} is running"
-      loop:
-        - consul.service
-        - docker.service
-
-    - name: "Set running services facts"
-      set_fact:
-        service_consul_running: yes
-        service_docker_running: yes
-
-    - name: "Ensure required modules are installed"
-      become: yes
-      pip:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - python-consul
-        - docker
+    - name: "Run pre-tasks"
+      import_role:
+        name: pre-tasks
 
   tasks:
 

@@ -2,6 +2,12 @@
 
 - hosts: hcnp_nodes
 
+  pre_tasks:
+
+    - name: "Run pre-tasks"
+      import_role:
+        name: pre-tasks
+
   tasks:
 
     - import_role:

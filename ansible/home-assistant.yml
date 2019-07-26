@@ -6,6 +6,12 @@
 
     - homeassistant_configuration_clone: yes
 
+  pre_tasks:
+
+    - name: "Run pre-tasks"
+      import_role:
+        name: pre-tasks
+
   vars_prompt:
 
     - name: github_user

@@ -27,7 +27,8 @@
     state: started
     recreate: yes
     published_ports:
-      - "{{ prometheus.service.ports.http }}:9090"
+#      - "{{ prometheus.service.ports.http }}:9090"
+      - "9091:9090"
     volumes:
       - "{{ prometheus.storage }}/prometheus.yml:/etc/prometheus/prometheus.yml"
 

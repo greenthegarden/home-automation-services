@@ -2,6 +2,12 @@
 
 - hosts: gogs-nodes
 
+  pre_tasks:
+
+    - name: "Run pre-tasks"
+      import_role:
+        name: pre-tasks
+
   # remote_user: pi
 
   # vars:

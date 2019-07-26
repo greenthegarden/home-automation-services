@@ -2,12 +2,16 @@
 
 - hosts: hcnp_nodes
 
-
   vars:
     nextcloud_network: nextcloud_network
 
-  tasks:
+  pre_tasks:
 
+    - name: "Run pre-tasks"
+      import_role:
+        name: pre-tasks
+
+  tasks:
 
     # - name: "Create nextcloud network"
     #   docker_network:
