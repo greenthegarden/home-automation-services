@@ -1,0 +1,11 @@
+---
+
+- name: Create configuration directory
+  file:
+    path: "{{ portainer.storage.configuration }}"
+    state: directory
+
+- name: Create configuration file
+  template:
+    src: endpoints.json.j2
+    dest: "{{ portainer.storage.configuration }}/endpoints.json"

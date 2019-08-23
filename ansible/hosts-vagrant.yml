@@ -1,0 +1,100 @@
+---
+
+all:
+
+  hosts:
+
+    ansible-node.consul:
+      ansible_connection: local
+      ansible_host: localhost
+      public_iface: enp0s8
+    gateway-node.consul:
+      ansible_ssh_host: 172.16.1.1
+      ansible_ssh_private_key_file: /vagrant/.vagrant/machines/gateway-node/virtualbox/private_key
+      ansible_ssh_user: vagrant
+      public_iface: eth1
+    dns-node.consul:
+      ansible_ssh_host: 172.16.1.254
+      ansible_ssh_private_key_file: /vagrant/.vagrant/machines/dns-node/virtualbox/private_key
+      ansible_ssh_user: vagrant
+      public_iface: eth1
+    compute-node-1.consul:
+      ansible_ssh_host: 172.16.1.10
+      ansible_ssh_private_key_file: /vagrant/.vagrant/machines/compute-node-1/virtualbox/private_key
+      ansible_ssh_user: vagrant
+      public_iface: enp0s8
+    compute-node-2.consul:
+      ansible_ssh_host: 172.16.1.11
+      ansible_ssh_private_key_file: /vagrant/.vagrant/machines/compute-node-2/virtualbox/private_key
+      ansible_ssh_user: vagrant
+      public_iface: enp0s8
+    compute-node-3.consul:
+      ansible_ssh_host: 172.16.1.12
+      ansible_ssh_private_key_file: /vagrant/.vagrant/machines/compute-node-3/virtualbox/private_key
+      ansible_ssh_user: vagrant
+      public_iface: enp0s8
+
+
+  children:
+  
+    compute_nodes:
+      hosts:
+        compute-node-1.consul:
+        compute-node-2.consul:
+        compute-node-3.consul:
+
+    consul_instances:
+      hosts:
+        compute-node-1.consul:
+          consul_iface: enp0s8
+          consul_node_role: bootstrap
+          consul_dnsmasq_enable: true
+        compute-node-2.consul:
+          consul_iface: enp0s8
+          consul_node_role: server
+          consul_dnsmasq_enable: true
+        compute-node-3.consul:
+          consul_iface: enp0s8
+          consul_node_role: server
+          consul_dnsmasq_enable: true
+
+    vault_instances:
+      hosts:
+        compute-node-1.consul:
+          vault_iface: enp0s8
+          vault_node_role: bootstrap
+        compute-node-2.consul:
+          vault_iface: enp0s8
+          vault_node_role: server
+        compute-node-3.consul:
+          vault_iface: enp0s8
+          vault_node_role: server
+
+    docker_instances:
+      hosts:
+        compute-node-1.consul:
+        compute-node-2.consul:
+        compute-node-3.consul:
+
+    nomad_instances:
+      hosts:
+        compute-node-1.consul:
+          nomad_iface: enp0s8
+          nomad_node_role: server
+        compute-node-2.consul:
+          nomad_iface: enp0s8
+          nomad_node_role: client
+        compute-node-3.consul:
+          nomad_iface: enp0s8
+          nomad_node_role: client
+
+    gateway_instances:
+      hosts:
+        gateway-node.consul:
+          traefik_iface: eth1
+          consul_host: 172.16.1.10
+
+    dns_instances:
+      hosts:
+        dns-node.consul:
+          dns_iface: eth1

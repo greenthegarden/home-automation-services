@@ -1,10 +1,14 @@
-job "portainer" {
+job "portainer-job" {
 
-  datacenters = ["dc1"]
+  region = "global"
+
+  datacenters = ["hcnp"]
+
+  type = "service"
 
   group "node-management" {
 
-    count = 2
+    count = 1
 
     restart {
       attempts = 3
@@ -12,43 +16,56 @@ job "portainer" {
       mode     = "delay"
     }
 
-    task "portainer-container" {
+    task "portainer" {
 
       driver = "docker"
 
       config {
-        image = "{{ portainer.image.name }}:{{ portainer.image.tag }}"
+        image = "portainer/portainer:1.22.0"
         args  = [ "--no-auth" ]
+#        dns_servers = []
+#        dns_search_domains = []
         port_map {
-          http = "{{ portainer.service.ports.http }}"
+          http = "9000"
         }
         volumes = [
           "/var/run/docker.sock:/var/run/docker.sock",
-          "{{ portainer.storage }}:/data"
+          "portainer_data:/data",
         ]
       }
 
-      service {
-        name = "{{ portainer.service.name }}"
-        port = "http"
-        tags = [
-          "traefik.enable=true"
-          ]
-        check {
-          type     = "http"
-          path     = "/"
-          interval = "10s"
-          timeout  = "2s"
-        }
-      }
-      
       resources {
-        memory = 128
+        cpu = 500 # 500MHz
+        memory = 512 # MB
         network {
           port "http" {}
         }
       }
 
+      service {
+        name = "portainer"
+        port = "http"
+        tags = [
+          "traefik.frontend.rule=PathPrefixStrip:/portainer",
+          "traefik.backend=portainer",
+          "traefik.port=9000",
+          "traefik.enable=true",
+          "traefik.passHostHeader=true",
+          "traefik.frontend.entryPoints=http",
+          "traefik.frontend.redirect.regex=^(.*)/portainer$$",
+          "traefik.frontend.redirect.replacement=$$1/portainer/",
+          "traefik.frontend.rule=PathPrefix:/portainer;ReplacePathRegex: ^/portainer/(.*) /$$1",
+        ]
+        check {
+          name     = "alive"
+          type     = "http"
+          path     = "/"
+          interval = "30s"
+          timeout  = "5s"
+          port     = "http"
+        }
+      }
+      
     }
 
   }

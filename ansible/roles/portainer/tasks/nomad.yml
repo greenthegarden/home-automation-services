@@ -3,7 +3,7 @@
 - name: Copy job to /tmp
   copy:
     src: portainer.nomad
-    dest: /tmp/portainer.nomad
+    dest: /apps/portainer.nomad
   when: 0
 
 - name: Copy job to /tmp

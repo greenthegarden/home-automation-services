@@ -2,6 +2,9 @@
 
 - hosts: local-system # rpi-home-network-nodes
 
+  vars:
+    nomad_server_ip: 172.16.1.10
+
   pre_tasks:
 
     - name: "Run pre-tasks"
@@ -12,10 +15,10 @@
 
     - import_role:
         name: portainer
-        # tasks_from: nomad.yml
-        tasks_from: container.yml
+        tasks_from: nomad.yml
+        # tasks_from: container.yml
       environment:
-        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+        NOMAD_ADDR: "http://{{ nomad_server_ip }}:4646"
       tags:
         - portainer
         - services
