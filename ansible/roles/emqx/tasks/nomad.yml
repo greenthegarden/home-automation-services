@@ -1,0 +1,10 @@
+---
+
+- name: Copy job to /tmp
+  template:
+    src: emqx.nomad.j2
+    dest: /tmp/emqx.nomad
+
+- name: Run job
+  command: nomad job run /tmp/emqx.nomad
+  register: nomad_emqx_job_submitted

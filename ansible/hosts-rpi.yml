@@ -4,61 +4,44 @@ all:
 
   hosts:
 
-    # hcnp-node-50:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.1.50
-    #   ansible_user: pi
-    # hcnp-node-51:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.1.51
-    #   ansible_user: pi
-    # # hcnp-node-52:
-    # #   ansible_connection: ssh
-    # #   ansible_host: 192.168.1.52
-    # #   ansible_user: pi
-    # hcnp-node-53:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.1.53
-    #   ansible_user: pi
-    hcnp-node-54:
+    localhost:
+      ansible_connection: local
+      ansible_host: localhost
+      ansible_user: philip
+      public_iface: wlp3s0
+    hcnp-node-0:
       ansible_connection: ssh
-      ansible_host: 192.168.1.54
+      ansible_host: rpi-50
       ansible_user: pi
-    # hcnp-node-55:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.1.55
-    #   ansible_user: pi
-    # local-system:
-    #   ansible_connection: local
-    #   ansible_host: localhost
-    #   ansible_user: philip
-    #   consul_mode: server
-    #camera-server:
-    #  ansible_connection: ssh
-    #  ansible_host: 192.168.1.8
-    #  ansible_user: pi
-    # wb-node-48:
-    #   ansible_connection: ssh
-    #   ansible_host: 192.168.100.48
-    #   ansible_user: ubuntu
-    #   consul_mode: server
+      cluster_iface: eth0
+      public_iface: eth0
+    hcnp-node-1:
+      ansible_connection: ssh
+      ansible_host: rpi-53
+      ansible_user: pi
+      cluster_iface: eth0
+      public_iface: eth0
+    hcnp-node-2:
+      ansible_connection: ssh
+      ansible_host: rpi-54
+      ansible_user: pi
+      cluster_iface: eth0
+      public_iface: eth0
+    hcnp-node-3:
+      ansible_connection: ssh
+      ansible_host: rpi-55
+      ansible_user: pi
+      cluster_iface: eth0
+      public_iface: eth0
 
   children:
-  
-    hcnp_nodes:
-      hosts:
-        # hcnp-node-50:
-        # hcnp-node-51:
-        # hcnp-node-52:
-        # hcnp-node-53:
-        hcnp-node-54:
-        # hcnp-node-55:
-        
 
-    emqx_instances:
+    compute_nodes:
       hosts:
-        hcnp-node-54:
-      
-    camera_server_instances:
+        hcnp-node-1:
+        hcnp-node-2:
+        hcnp-node-3:
+ 
+    nomad_server_instances:
       hosts:
-        camera-server:
+        hcnp-node-1:

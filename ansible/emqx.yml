@@ -1,6 +1,6 @@
 ---
 
-- hosts: emqx_instances
+- hosts: nomad_server_instances
 
   pre_tasks:
 
@@ -12,8 +12,8 @@
 
     - import_role:
         name: emqx
-        tasks_from: container.yml
+        tasks_from: nomad.yml
       environment:
-        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
+        NOMAD_ADDR: "http://rpi-53:4646"
       tags:
         - emqx

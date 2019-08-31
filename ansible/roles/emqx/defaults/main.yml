@@ -8,6 +8,9 @@ emqx_machine_image_tag_map:
   x86_64: ''
 
 emqx:
+  image:
+    name: emqx/emqx
+    tag: v3.2.2
   service:
     name: emqx
     ports:
@@ -15,6 +18,3 @@ emqx:
       http: 18083
     restart:
       policy: always
-  image:
-    name: emqx/emqx
-    tag: v3.2.1
