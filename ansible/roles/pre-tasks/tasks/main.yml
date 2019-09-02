@@ -24,6 +24,7 @@
     success_msg: "{{ item }} is running"
   loop:
     - consul.service
+    # - nomad.service
     - docker.service
 
 - name: "Set running services facts"

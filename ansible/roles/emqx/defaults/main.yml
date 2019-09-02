@@ -8,13 +8,13 @@ emqx_machine_image_tag_map:
   x86_64: ''
 
 emqx:
+  image:
+    name: emqx/emqx-edge
+    tag: v3.2.2
   service:
     name: emqx
     ports:
       mqtt: 1883
-      http: 18083
+      http: 8080
     restart:
       policy: always
-  image:
-    name: emqx/emqx
-    tag: v3.2.1
