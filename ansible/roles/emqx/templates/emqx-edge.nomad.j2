@@ -31,6 +31,10 @@ job "emqx" {
       service {
         name = "{{ emqx.service.name }}"
         port = "http"
+        tags = [
+          "traefik.tags=service",
+          "traefik.frontend.rule=PathPrefixStrip:/emqx/",
+        ]
         check {
           type = "http"
           path = "/"
@@ -42,7 +46,9 @@ job "emqx" {
       resources {
         network {
           port "http" {}
-          port "mqtt" {}
+          port "mqtt" {
+            static = "{{ emqx.service.ports.mqtt }}"
+          }
         }
       }
   
