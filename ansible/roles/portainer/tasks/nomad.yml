@@ -14,3 +14,4 @@
 - name: Run job
   command: nomad job run /tmp/portainer.nomad
   register: nomad_portainer_job_submitted
+  delegate_to: "{{ nomad_server_ip }}"

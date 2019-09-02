@@ -1,6 +1,6 @@
 ---
 
-- hosts: local-system # rpi-home-network-nodes
+- hosts: compute-node-1.consul # rpi-home-network-nodes
 
   vars:
     nomad_server_ip: 172.16.1.10
