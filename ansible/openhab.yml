@@ -26,17 +26,26 @@
 
   tasks:
 
-    - import_role:
-        name: openhab
-        tasks_from: configure.yml
-      tags:
-        - openhab
-        - configuration
-      when: run_configuration
+    - name: Build an openHAB image with configuration
+      docker_image:
+        build:
+          path: ./sinatra
+        name: registry.ansible.com/chouseknecht/sinatra
+        tag: v1
+        push: yes
+        source: build
+
+    # - import_role:
+    #     name: openhab
+    #     tasks_from: configure.yml
+    #   tags:
+    #     - openhab
+    #     - configuration
+    #   when: run_configuration
 
     - import_role:
         name: openhab
-        tasks_from: container.yml
+        tasks_from: nomad.yml
       tags:
         - openhab
         - services
