@@ -1,0 +1,11 @@
+---
+
+- name: Copy job to /tmp
+  template:
+    src: openhab.nomad.j2
+    dest: /tmp/openhab.nomad
+
+- name: Run job
+  command: nomad job run /tmp/openhab.nomad
+  register: nomad_openhab_job_submitted
+  delegate_to: "{{ nomad_server }}"

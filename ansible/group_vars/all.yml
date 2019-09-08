@@ -1,4 +1,5 @@
 ---
 
-# consul_server: 192.168.1.14
-storage_base: "/home/{{ ansible_user_id }}/.hcnp"
+consul_server: rpi-53
+nomad_server: rpi-53
+storage_base: "/home/{{ ansible_user_id }}/Sync"

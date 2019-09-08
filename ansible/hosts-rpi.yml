@@ -41,7 +41,7 @@ all:
         hcnp-node-1:
         hcnp-node-2:
         hcnp-node-3:
- 
-    nomad_server_instances:
+      
+    compute_servers:
       hosts:
         hcnp-node-1:

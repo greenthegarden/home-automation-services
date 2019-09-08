@@ -1,6 +1,22 @@
 ---
 
-- hosts: hcnp_nodes
+- hosts: compute_nodes
+
+  vars:
+    run_configuration: no
+    
+  tasks:
+
+    - import_role:
+        name: openhab
+        tasks_from: configure-users.yml
+      tags:
+        - openhab
+        - configuration
+      when: run_configuration
+
+
+- hosts: compute_servers
 
   vars:
     run_configuration: no
@@ -13,35 +29,38 @@
     - name: "Run pre-tasks"
       import_role:
         name: pre-tasks
+      when: 0
 
   vars_prompt:
 
     - name: "github_user"
       prompt: "Enter github username"
       private: no
+      when: run_configuration
 
     - name: "github_password"
       prompt: "Enter github password"
       private: yes
+      when: run_configuration
 
   tasks:
 
-    - name: Build an openHAB image with configuration
-      docker_image:
-        build:
-          path: ./sinatra
-        name: registry.ansible.com/chouseknecht/sinatra
-        tag: v1
-        push: yes
-        source: build
+    # - name: Build an openHAB image with configuration
+    #   docker_image:
+    #     build:
+    #       path: ./sinatra
+    #     name: registry.ansible.com/chouseknecht/sinatra
+    #     tag: v1
+    #     push: yes
+    #     source: build
 
-    # - import_role:
-    #     name: openhab
-    #     tasks_from: configure.yml
-    #   tags:
-    #     - openhab
-    #     - configuration
-    #   when: run_configuration
+    - import_role:
+        name: openhab
+        tasks_from: configure-directories.yml
+      tags:
+        - openhab
+        - configuration
+      when: run_configuration
 
     - import_role:
         name: openhab
@@ -49,4 +68,3 @@
       tags:
         - openhab
         - services
-        

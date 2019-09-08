@@ -1,33 +1,5 @@
 ---
 
-# Create group
-- name: "Create system group {{ openhab.group.name }} with id {{ openhab.group.id }}"
-  become: yes
-  group:
-    name: "{{ openhab.group.name }}"
-    state: present
-    gid: "{{openhab.group.id }}"
-    system: yes
-
-# sudo useradd -r -s /sbin/nologin openhab
-- name: Create system user {{ openhab.user.name }} with id {{ openhab.user.id }}"
-  become: yes
-  user:
-    name: "{{ openhab.user.name }}"
-    create_home: no
-    group: "{{ openhab.group.name }}"
-    system: yes
-    shell: /sbin/nologin
-    uid: "{{ openhab.user.id }}"
-
-# usermod -a -G openhab <user>
-- name: "Add user {{ ansible_user }} to group {{ openhab.group.name }}"
-  become: yes
-  user:
-    name: "{{ ansible_user }}"
-    groups: "{{ openhab.group.name }}"
-    append: yes
-
 # Create directories
 - name: "Create base directory {{ openhab.directories.base }}"
   become: yes
