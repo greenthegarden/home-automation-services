@@ -1,0 +1,42 @@
+---
+
+- hosts: monitor_instances
+
+  vars:
+  
+    service_consul_running: no
+
+
+  pre_tasks:
+
+    - name: "Run pre-tasks"
+      import_role:
+       name: pre-tasks
+    
+    - name: Configure storage
+      import_role:
+        name: grafana
+        tasks_from: pre-install.yml
+
+
+  tasks:
+
+    - name: Run portainer role
+      import_role:
+        name: portainer
+        tasks_from: container.yml
+
+    - name: Run prometheus role
+      import_role:
+        name: prometheus
+        tasks_from: container.yml
+
+    - name: Run emqx role
+      import_role:
+        name: emqx
+        tasks_from: container.yml
+
+    - name: Run grafana role
+      import_role:
+        name: grafana
+        tasks_from: container.yml

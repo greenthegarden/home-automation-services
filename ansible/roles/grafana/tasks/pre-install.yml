@@ -1,0 +1,10 @@
+---
+
+- name: "Create base directory {{ grafana.storage }}"
+  # become: yes
+  file:
+    name: "{{ grafana.storage }}"
+    state: directory
+    # owner: "{{ openhab.user.name }}"
+    # group: "{{ openhab.group.name }}"
+    mode: 0755

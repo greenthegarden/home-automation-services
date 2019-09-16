@@ -1,3 +1,4 @@
 ---
 
 ansible_version_minimum: '2.6.0'
+ansible_python_interpreter: /usr/bin/python3

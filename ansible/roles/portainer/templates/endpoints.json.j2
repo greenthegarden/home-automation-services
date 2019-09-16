@@ -1,8 +1,8 @@
 [
-  {% for node in hcnp_node_list %}
+  {% for node in compute_nodes %}
   ,{
-    "Name": "{{ ansible_hostname }}",
-    "URL": "tcp://{{ ansible_hostname }}:2375"
+    "Name": "{{ ansible_host }}",
+    "URL": "tcp://{{ ansible_host }}:2375"
   }
   {% endfor %}
 ]

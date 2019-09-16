@@ -26,7 +26,7 @@
     interactive: yes
     keep_volumes: yes
     memory: 512m
-    network_mode: host  # needs to be host to support UPnP discorvery
+    # network_mode: host  # needs to be host to support UPnP discorvery
     published_ports:
       - "{{ openhab.service.ports.http }}:8080"
       - "{{ openhab.service.ports.https }}:8443"

@@ -1,0 +1,59 @@
+job "emqx" {
+
+  region = "global"
+  
+  datacenters = ["hcnp"]
+  
+  type = "service"
+
+  group "home-automation" {
+    
+    count = 1
+
+    restart {
+      attempts = 3
+      delay    = "20s"
+      mode     = "delay"
+    }
+
+    task "emqx-container" {
+
+      driver = "docker"
+
+      config {
+        image = "{{ emqx.image.name }}:{{ emqx.image.tag }}"
+        port_map {
+          http = "{{ emqx.service.ports.http }}",
+          mqtt = "{{ emqx.service.ports.mqtt }}"
+        }
+      }
+
+      service {
+        name = "{{ emqx.service.name }}"
+        port = "http"
+        tags = [
+          "traefik.tags=service",
+          "traefik.frontend.rule=PathPrefixStrip:/emqx/",
+        ]
+        check {
+          type = "http"
+          path = "/"
+          interval = "10s"
+          timeout = "2s"
+        }
+      }
+
+      resources {
+        network {
+          port "http" {}
+          port "mqtt" {
+            static = "{{ emqx.service.ports.mqtt }}"
+          }
+        }
+      }
+  
+    }
+
+  }
+
+}

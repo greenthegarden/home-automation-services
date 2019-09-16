@@ -1,9 +1,9 @@
 ---
 
-- hosts: compute-node-1.consul # rpi-home-network-nodes
+- hosts: monitor_instances
 
   vars:
-    nomad_server_ip: 172.16.1.10
+    service_consul_running: no
 
   pre_tasks:
 
@@ -15,10 +15,7 @@
 
     - import_role:
         name: portainer
-        tasks_from: nomad.yml
-        # tasks_from: container.yml
-      environment:
-        NOMAD_ADDR: "http://{{ nomad_server_ip }}:4646"
+        tasks_from: container.yml
       tags:
         - portainer
         - services

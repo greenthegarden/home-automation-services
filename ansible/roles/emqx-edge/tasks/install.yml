@@ -1,0 +1,40 @@
+---
+
+- name: Copy file
+  become: yes
+  copy:
+    src: /tmp/emqx-edge-raspbian9.deb
+    dest: /tmp/emqx-edge-raspbian9.deb
+
+- name: Install dependency
+  become: true
+  apt:
+    name: lksctp-tools
+    state: present
+
+# - name: Add the user 'emqx'
+#   user:
+#     name: emqx
+#     shell: /sbin/nologin
+#     comment: consul_exporter
+
+- name: Install package
+  become: yes
+  apt:
+    deb: /tmp/emqx-edge-raspbian9.deb
+
+- name: Start service
+  become: yes
+  systemd:
+    name: emqx.service
+    state: started
+    enabled: yes
+
+- name: "register {{ emqx.service.name }} service with the local consul agent"
+  consul:
+    service_name: "{{ emqx.service.name }}-{{ item.value }}"
+    service_port: "{{ item.value }}"
+    state: present
+  with_dict: "{{ emqx.service.ports }}"
+  when: service_consul_running
+  

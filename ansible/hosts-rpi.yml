@@ -9,6 +9,10 @@ all:
       ansible_host: localhost
       ansible_user: philip
       public_iface: wlp3s0
+    hcnp-monitor:
+      ansible_connection: ssh
+      ansible_host: monitor
+      ansible_user: runner
     hcnp-node-0:
       ansible_connection: ssh
       ansible_host: rpi-50
@@ -45,3 +49,17 @@ all:
     compute_servers:
       hosts:
         hcnp-node-1:
+
+    emqx_instances:
+      hosts:
+        hcnp-node-1:
+        hcnp-node-2:
+        hcnp-node-3:
+
+    controller_host:
+      hosts:
+        localhost
+
+    monitor_instances:
+      hosts:
+        hcnp-monitor

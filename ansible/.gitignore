@@ -1,2 +1,4 @@
 #ensure ansible retry files are not added to repo
 *.retry
+
+hosts.yml

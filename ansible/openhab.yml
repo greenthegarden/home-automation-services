@@ -16,10 +16,11 @@
       when: run_configuration
 
 
-- hosts: compute_servers
+- hosts: hcnp-node-3
 
   vars:
     run_configuration: no
+    container_orchestration: ansible
 
     service_consul_running: no
     service_docker_running: no
@@ -29,7 +30,6 @@
     - name: "Run pre-tasks"
       import_role:
         name: pre-tasks
-      when: 0
 
   vars_prompt:
 
@@ -68,3 +68,12 @@
       tags:
         - openhab
         - services
+      when: container_orchestration == "nomad"
+
+    - import_role:
+        name: openhab
+        tasks_from: container.yml
+      tags:
+        - openhab
+        - services
+      when: container_orchestration == "ansible"

@@ -1,19 +1,20 @@
 ---
 
-- hosts: hcnp_nodes
+- hosts: monitor_instances
 
-  pre_tasks:
+  vars:
+    service_consul_running: no
 
-    - name: "Run pre-tasks"
-      import_role:
-        name: pre-tasks
+  # pre_tasks:
+
+  #   - name: "Run pre-tasks"
+  #     import_role:
+  #       name: pre-tasks
 
   tasks:
 
     - import_role:
         name: prometheus
         tasks_from: container.yml
-      environment:
-        NOMAD_ADDR: "http://{{ ansible_default_ipv4.address }}:4646"
       tags:
         - prometheus
