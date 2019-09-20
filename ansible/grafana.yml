@@ -1,17 +1,25 @@
 ---
 
-- hosts: hcnp_nodes
+- hosts: monitor_instances
 
+  vars:
+  
+    service_consul_running: no
+    
   pre_tasks:
 
     - name: "Run pre-tasks"
       import_role:
         name: pre-tasks
 
+    - name: Configure storage
+      import_role:
+        name: grafana
+        tasks_from: pre-install.yml
+
   tasks:
 
-    - import_role:
+    - name: Run grafana role
+      import_role:
         name: grafana
-        tasks_from: docker.yml
-      tags:
-        - grafana
+        tasks_from: container.yml
