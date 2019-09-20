@@ -3,7 +3,7 @@
 - hosts: compute_nodes
 
   vars:
-    run_configuration: no
+    run_configuration: yes
     
   tasks:
 
@@ -16,14 +16,16 @@
       when: run_configuration
 
 
-- hosts: hcnp-node-3
+- hosts: hcnp-node-2
 
   vars:
-    run_configuration: no
+    run_configuration: yes
     container_orchestration: ansible
 
     service_consul_running: no
     service_docker_running: no
+
+    consul_server: '127.0.0.1:8500'
 
   pre_tasks:
 

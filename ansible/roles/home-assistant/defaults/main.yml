@@ -11,7 +11,7 @@ homeassistant:
     name:
       linux: "homeassistant/home-assistant"
       rpi: "homeassistant/raspberrypi3-homeassistant"
-    tag: latest
+    tag: stable
   storage: "{{ storage_base }}/home-assistant"
 
 homeassistant_configuration_clone: yes

@@ -22,6 +22,7 @@
   loop: "{{ openhab.directories.data }}"
 
 # Clone configuration
+# TODO: use ssh key for git
 - name: "Clone configuration into {{ openhab.directories.base }}/conf"
   become: yes
   git:

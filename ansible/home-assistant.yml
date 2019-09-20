@@ -1,10 +1,12 @@
 ---
 
-- hosts: hcnp_nodes
+- hosts: hcnp-node-3
 
   vars:
 
     - homeassistant_configuration_clone: yes
+    # TODO: check services running
+    - service_consul_running: no
 
   pre_tasks:
 
