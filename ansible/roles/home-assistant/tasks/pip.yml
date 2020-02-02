@@ -1,0 +1,17 @@
+---
+
+# Based on https://www.home-assistant.io/docs/installation/virtualenv/
+
+- name: Install Home Assistant using pip into a virtual environment
+  pip:
+    name: "{{ homeassistant_pip }}"
+    state: latest
+    # virtualenv: "{{ homeassistant_venv }}"
+
+    
+- name: Clone configuration
+  include_tasks: configure.yml
+
+- name: Run Home Assistant
+  command: /home/vagrant/.local/bin/hass --config {{ homeassistant_storage | quote }} --open-ui
+  register: hass_run

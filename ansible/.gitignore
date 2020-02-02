@@ -1,4 +1,10 @@
 #ensure ansible retry files are not added to repo
 *.retry
 
+# do not add external ansible roles
+roles/brianshumate.*
+roles/cloudalchemy.*
+roles/geerlingguy.*
+roles/greenthegarden.*
+
 hosts.yml

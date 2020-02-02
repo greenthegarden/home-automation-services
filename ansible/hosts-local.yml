@@ -18,3 +18,7 @@ all:
     emqx_instances:
       hosts:
         local-system:
+
+    home_assistant_instances:
+      hosts:
+        local-system:

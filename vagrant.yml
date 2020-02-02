@@ -1,0 +1,49 @@
+---
+
+configs:
+
+  services_node_count: 1
+
+  use: 'test'
+
+  test:
+    vb:
+      ip_range: 172.16.1
+      ip_netmask: 255.255.255.0
+    controller_node:
+      name: "controller-node"
+      vb:
+        external_ip_base: 10
+        box: "debian/buster64"
+        resources:
+          cpus: 1
+          memory: 512
+    services_node:
+      name: "services-node"
+      vb:
+        external_ip_base: 100
+        box: "debian/buster64"
+        resources:
+          cpus: 1
+          memory: 512
+
+  deployment:
+    vb:
+      ip_range: 172.16.1
+      ip_netmask: 255.255.255.0
+    controller_node:
+      name: "controller-node"
+      vb:
+        external_ip_base: 10
+        box: "debian/buster64"
+        resources:
+          cpus: 1
+          memory: 512
+    services_node:
+      name: "services-node"
+      vb:
+        external_ip_base: 100
+        box: "debian/buster64"
+        resources:
+          cpus: 1
+          memory: 512

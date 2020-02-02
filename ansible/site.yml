@@ -1,0 +1,5 @@
+---
+# file: site.yml
+
+#- import_playbook: deploy-home-assistant.yml
+- import_playbook: home-assistant.yml

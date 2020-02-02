@@ -1,0 +1,31 @@
+---
+
+- name: brianshumate.consul
+  cms: git
+  src: git+https://github.com/brianshumate/ansible-consul.git
+  version: origin/master
+
+- name: cloudalchemy.node-exporter
+  cms: git
+  src: git+https://github.com/cloudalchemy/ansible-node-exporter.git
+  version: origin/master
+
+- name: geerlingguy.pip
+  cms: git
+  src: git+https://github.com/geerlingguy/ansible-role-pip.git
+  version: origin/master
+
+- name: greenthegarden.configure-host
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-configure-host.git
+  version: origin/master
+
+- name: greenthegarden.emqx-edge
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-emqx-edge.git
+  version: origin/master
+
+- name: greenthegarden.raspi-config
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-raspi-config.git
+  version: origin/master

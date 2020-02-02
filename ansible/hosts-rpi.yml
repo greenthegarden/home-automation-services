@@ -38,6 +38,12 @@ all:
       cluster_iface: eth0
       public_iface: eth0
 
+  vars:
+
+    ansible_python_interpreter: /usr/bin/python3
+    pip_package: python3-pip
+    pip_executable: pip3
+
   children:
 
     compute_nodes:
@@ -63,3 +69,5 @@ all:
     monitor_instances:
       hosts:
         hcnp-monitor
+
+    
