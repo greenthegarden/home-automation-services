@@ -1,0 +1,24 @@
+---
+
+# Ensure all host tasks are performed first, set of common tasks
+- import_playbook: playbooks/home-monitoring-nodes.yml
+# Run role to install and configure Consul on hosts specified as consul_instances
+- import_playbook: playbooks/services/consul.yml
+# Run role to install and configure EMQ X Edge on hosts specified as emqx_instances
+- import_playbook: playbooks/services/emqx-edge.yml
+# Run role to install and configure InfluxDB on hosts specified as influxdb_instances
+- import_playbook: playbooks/services/influxdb.yml
+# Run role to install and configure Telegraf on telegraf_instances
+- import_playbook: playbooks/services/telegraf.yml
+# Run role to install and configure Chronograf on chronograf_instances
+- import_playbook: playbooks/services/chronograf.yml
+# Run role to install and configure Kapacitor on kapacitor_instances
+- import_playbook: playbooks/services/kapacitor.yml
+# # Run role to install and set up the Prometheus node exporter on ALL hosts
+# - import_playbook: playbooks/services/node-exporter.yml
+# # Run role to install and set up the Prometheus alert manager on ALL hosts
+# - import_playbook: playbooks/services/alert-manager.yml
+# # Run role to install and configure Prometheus on prometheus_instances
+# - import_playbook: playbooks/services/prometheus.yml
+# Run role to install and configure Grafana on grafana_instances
+- import_playbook: playbooks/services/grafana.yml

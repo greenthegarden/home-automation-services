@@ -43,3 +43,51 @@ The following [Ansible playbooks](https://docs.ansible.com/ansible/latest/user_g
 | [ansible/home-assistant.yml](ansible/home-assistant.yml) | |
 | [ansible/nextcloud.yml](ansible/nextcloud.yml) | Deploys the |
 | [ansible/openhab.yml](ansible/openhab.yml) | |
+
+## Enable WiFi connection
+
+Configuration for Wifi (based on https://raspberrypi.stackexchange.com/questions/10251/prepare-sd-card-for-wifi-on-headless-pi)
+
+Create a file `/boot/wpa_supplicant.conf` in the form
+
+```sh
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=AU
+
+network={
+    ssid="«your_SSID»"
+    psk="«your_PSK»"
+}
+```
+
+## Notes
+
+Contents of /etc/network/interfaces:
+
+```sh
+auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+    wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+    post-up ifdown eth0
+iface default inet dhcp
+```
+
+Contents of /etc/wpa_supplicant/wpa_supplicant.conf:
+
+```sh
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+    ssid="YOUR_SSID_HERE"
+    psk="YOUR_SECRET_PASSPHRASE_HERE"
+    id_str="SOME_DESCRIPTIVE_NAME"
+}
+```

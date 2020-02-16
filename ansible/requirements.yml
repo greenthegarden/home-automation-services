@@ -1,0 +1,66 @@
+---
+
+- name: brianshumate.consul
+  cms: git
+  src: git+https://github.com/brianshumate/ansible-consul.git
+  version: origin/master
+
+- name: cloudalchemy.alertmanager
+  cms: git
+  src: git+https://github.com/cloudalchemy/ansible-alertmanager.git
+  version: origin/master
+
+- name: cloudalchemy.grafana
+  cms: git
+  src: git+https://github.com/cloudalchemy/ansible-grafana.git
+  version: origin/master
+
+- name: cloudalchemy.node-exporter
+  cms: git
+  src: git+https://github.com/cloudalchemy/ansible-node-exporter.git
+  version: origin/master
+
+- name: cloudalchemy.prometheus
+  cms: git
+  src: git+https://github.com/cloudalchemy/ansible-prometheus.git
+  version: origin/master
+
+- name: geerlingguy.docker_arm
+  cms: git
+  src: git+https://github.com/geerlingguy/ansible-role-docker_arm.git
+  version: origin/master
+
+- name: geerlingguy.pip
+  cms: git
+  src: git+https://github.com/geerlingguy/ansible-role-pip.git
+  version: origin/master
+
+- name: geerlingguy.postgresql
+  cms: git
+  src: git+https://github.com/geerlingguy/ansible-role-postgresql.git
+  version: origin/master
+
+- name: geerlingguy.redis
+  cms: git
+  src: git+https://github.com/geerlingguy/ansible-role-redis.git
+  version: origin/master
+
+- name: greenthegarden.configure-host
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-configure-host.git
+  version: origin/master
+
+- name: greenthegarden.emqx-edge
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-emqx-edge.git
+  version: origin/master
+
+- name: greenthegarden.raspi-config
+  cms: git
+  src: git+https://github.com/greenthegarden/ansible-role-raspi-config.git
+  version: origin/master
+
+- name: manala.influxdb
+  cms: git
+  src: git+https://github.com/manala/ansible-role-influxdb.git
+  version: origin/master

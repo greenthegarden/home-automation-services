@@ -7,15 +7,33 @@ playbook="site"
 requirements="requirements"
 use_retry=false
 use_sudo=false
+use_vault=false
+vault_details="dev@prompt"
+vault_password=false
 verbose_level="v"
 
+script=$0
+
+function usage {
+    echo "usage: $script [-bhl:rpsv] [-l limit_arg] [-v verbose_level]"
+    echo "  -b      use --ask-become-pass option"
+    echo "  -h      display help"
+    echo "  -r      use retry"
+    echo "  -p      use --ask-vault-pass option"
+    echo "  -l limit_arg      "
+    echo "  -v verbose_level  specify verbose level: v, vv, or vvv"
+    exit 1
+}
+
 # get command line arguments
-while getopts "bhl:rv:" opt ;
+while getopts "bhl:rpsv:" opt ;
 do
   case $opt in
     b) use_sudo=true;;
     l) limit_arg=$OPTARG;;
     r) use_retry=true;;
+    p) vault_password=true;;
+    s) use_vault=true;;
     v) verbose_level=$OPTARG;;
     h) usage
     exit 0;;
@@ -56,7 +74,19 @@ then
   fi
 fi
 
+if [ ${use_vault} = true ] ;
+then
+  read -p "Enter vault details [${vault_details}]: " vault_details_input
+  vault_details="${vault_details_input:-${vault_details}}"
+  vault_arg="--vault-id ${vault_details}"
+fi
+
 options=""
+if [ ${vault_password} = true ] ;
+then
+  options="${options} --ask-vault-pass"
+fi
+
 if [ ${use_sudo} = true ] ;
 then
   options="${options} --ask-become-pass"
@@ -77,4 +107,4 @@ then
 fi
 
 echo "Running playbook ${playbook_file} with inventory ${inventory_file} with options ${options}"
-ansible-playbook -i ${inventory_file} ${options} ${verbose_arg} ${playbook_file} ${limits}
+ansible-playbook -i ${inventory_file} ${options} ${vault_arg} ${verbose_arg} ${playbook_file} ${limits}

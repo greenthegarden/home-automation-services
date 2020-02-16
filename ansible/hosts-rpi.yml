@@ -38,28 +38,34 @@ all:
       cluster_iface: eth0
       public_iface: eth0
 
+  vars:
+
+    ansible_python_interpreter: /usr/bin/python3
+    pip_package: python3-pip
+    pip_executable: pip3
+
   children:
 
-    compute_nodes:
-      hosts:
-        hcnp-node-1:
-        hcnp-node-2:
-        hcnp-node-3:
+    # compute_nodes:
+    #   hosts:
+    #     hcnp-node-1:
+    #     hcnp-node-2:
+    #     hcnp-node-3:
       
-    compute_servers:
-      hosts:
-        hcnp-node-1:
+    # compute_servers:
+    #   hosts:
+    #     hcnp-node-1:
 
     emqx_instances:
       hosts:
-        hcnp-node-1:
+        # hcnp-node-1:
         hcnp-node-2:
-        hcnp-node-3:
+        # hcnp-node-3:
 
     controller_host:
       hosts:
         localhost
 
-    monitor_instances:
-      hosts:
-        hcnp-monitor
+    # monitor_instances:
+    #   hosts:
+    #     hcnp-monitor

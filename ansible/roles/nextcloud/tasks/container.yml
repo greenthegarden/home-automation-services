@@ -1,5 +1,29 @@
 ---
 
+- name: "Run image {{ nextcloud.image.name }}:{{ nextcloud.image.tag }} as service {{ nextcloud.service.name }}"
+  docker_container:
+    name: "{{ nextcloud.service.name }}"
+    image: "{{ nextcloud.image.name }}:{{ nextcloud.image.tag }}"
+    # env:
+    #   VIRTUAL_HOST: 'nextcloud.local'
+    #   LETSENCRYPT_HOST: 'nextcloud.local'
+    #   LETSENCRYPT_EMAIL: 'greenthegarden@gmail.com'
+    # networks:
+    #   - name: "{{ nextcloud_network }}"
+    published_ports:
+      - "{{ nextcloud.service.ports.http }}:80"
+    recreate: yes
+    state: started
+    volumes:
+      - nextcloud:/var/www/html
+      - "{{ nextcloud.storage }}/config:/var/www/html/config"
+      - "{{ nextcloud.storage }}/custom_apps:/var/www/html/custom_apps"
+      - "{{ nextcloud.storage }}/data:/var/www/html/data"
+      - "{{ nextcloud.storage }}/themes:/var/www/html/themes"
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ nextcloud.storage }}:/var/www/html"
+
+
 - name: "deregister {{ nextcloud.service.name }} service with the local consul agent"
   consul:
     service_name: "{{ nextcloud.service.name }}-{{ item.value }}"

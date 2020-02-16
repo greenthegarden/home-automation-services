@@ -1,7 +1,10 @@
 ---
 
-emqx_deb:
-emqx_edge_deb: https://www.emqx.io/downloads/edge/v3.2.2/emqx-edge-raspbian9-v3.2.2_armhf.deb
+emqx_edge_version: 3.2.5
+# see https://www.emqx.io/downloads/edge/
+# https://www.emqx.io/downloads/edge/v3.2.5/emqx-edge-raspbian10-v3.2.5.zip
+# https://www.emqx.io/downloads/edge/v3.2.5/emqx-edge-raspbian10-v3.2.5_armhf.deb
+emqx_edge_deb: https://www.emqx.io/downloads/edge/v{{ emqx_edge_version }}/emqx-edge-raspbian10-v{{ emqx_edge_version }}_armhf.deb
 emqx_edge_zip: https://www.emqx.io/downloads/edge/v3.2.2/emqx-edge-docker-v3.2.2-arm32v7.zip
 
 emqx_machine_image_tag_map:

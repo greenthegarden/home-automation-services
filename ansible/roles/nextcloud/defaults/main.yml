@@ -1,24 +1,28 @@
 ---
 
-nextcloud:
-  user:
-    name: nextcloud
-  group:
-    name: nextcloud
-  service:
-    name: nextcloud
-    ports:
-      http: 80
-    restart:
-      policy: always
-  image:
-    name: nextcloud
-    tag: latest
-  storage:
-    base: "{{ storage_base }}/nextcloud_storage"
-    directories: [
+db_image_name: postgres
+db_image_tag: latest
+
+db_service_name: postgres
+db_service_ports_http: 80
+
+db_volume_name: db
+
+nextcloud_user_name: nextcloud
+nextcloud_group_name: nextcloud
+
+nextcloud_service_name: nextcloud
+nextcloud_service_ports_http: 80
+
+nextcloud_image_name: nextcloud
+nextcloud_image_tag: latest
+
+nextcloud_storage_base: "{{ storage_base }}/nextcloud_storage"
+nextcloud_storage_directories: [
       config,
       custom_apps,
       data,
       themes
     ]
+
+nextcloud_volume_name: nextcloud

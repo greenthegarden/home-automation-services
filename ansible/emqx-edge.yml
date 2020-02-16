@@ -4,10 +4,10 @@
 
   pre_tasks:
 
-    - name: Get emqx
+    - name: Get emqx-edge
       get_url:
         url: "{{ emqx_edge_deb }}"
-        dest: /tmp/emqx-edge-raspbian9.deb
+        dest: /tmp/emqx-edge.deb
       delegate_to: localhost
 
     # - name: Unarchive
@@ -20,12 +20,23 @@
       import_role:
         name: pre-tasks
 
+    
+
   tasks:
 
     - name: Run emqx role
       become: true
       import_role:
-        name: emqx
+        name: emqx-edge
         tasks_from: install.yml
+      when: 1
 
+    - import_role:
+        name: emqx-edge
+        tasks_from: nomad.yml
+      environment:
+        NOMAD_ADDR: "http://rpi-53:4646"
+      tags:
+        - emqx
+      when: 0
 

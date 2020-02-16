@@ -16,7 +16,7 @@
     # - name: "Create nextcloud network"
     #   docker_network:
     #     name: "{{ nextcloud_network }}"
-      
+
     # - import_role:
     #     name: nginx-proxy
     #     tasks_from: container-nextcloud
@@ -37,7 +37,19 @@
     #   tags:
     #     - nginx
     #     - services
-        
+
+    - name: Install Docker
+      import_role:
+        name: geerlingguy.docker_arm
+
+    - name: Start Redis
+      import_role:
+        name: geerlingguy.redis
+
+    - name: Start Postresql
+      import_role:
+        name: geerlingguy.postgresql
+
     - import_role:
         name: nextcloud
         tasks_from: configure

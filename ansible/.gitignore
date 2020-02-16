@@ -1,4 +1,18 @@
+hosts.yml
+
+# ensure remote roles are not added to repo
+brianshumate.*/
+cloudalchemy.*/
+dj-wasabi.*/
+geerlingguy.*/
+greenthegarden.*/
+indigo-dc.*/
+kibatic.*/
+isc.*/
+manala.*/
+mediapeers.*/
+oefenweb.*/
+Stouts.*/
+
 #ensure ansible retry files are not added to repo
 *.retry
-
-hosts.yml
