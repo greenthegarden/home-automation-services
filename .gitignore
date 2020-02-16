@@ -4,3 +4,9 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# do not archive vagrant temporary files
+.vagrant/**
+
+# do not archive logs
+*.log

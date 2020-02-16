@@ -1,26 +1,25 @@
 ---
 
 # When running for first time to create a configuration file
-- name: "Create configuration directory {{ homeassistant.storage }}"
+- name: "Create configuration directory {{ homeassistant_storage }}"
   file:
-    path: "{{ homeassistant.storage }}"
+    path: "{{ homeassistant_storage }}"
     state: directory
 
 # TODO: use ssh key for git
-# Clone configureation
-- name: "Clone configuration into {{ homeassistant.storage }}"
+- name: "Clone configuration into {{ homeassistant_storage }}"
   git:
-    repo: 'https://{{ github_user | urlencode }}:{{ github_password | urlencode }}@{{ homeassistant.configuration.repo }}'
-    # repo: 'hhttps://github.com/greenthegarden/home-assistant-configuration.git'
-    dest: "{{ homeassistant.storage }}"
+    repo: 'https://{{ github_user | urlencode }}:{{ github_password | urlencode }}@{{ homeassistant_configuration_repo }}'
+    # repo: 'https://github.com/greenthegarden/home-assistant-configuration.git'
+    dest: "{{ homeassistant_storage }}"
     update: yes
     force: yes
   register: homeassistant_source
   when: homeassistant_configuration_clone
 
-- name: "Set permissions on {{ homeassistant.storage }}"
+- name: "Set permissions on {{ homeassistant_storage }}"
   become: yes
   file:
-    dest: "{{ homeassistant.storage }}"
+    dest: "{{ homeassistant_storage }}"
     mode: 0755
     recurse: yes

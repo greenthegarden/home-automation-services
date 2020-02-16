@@ -1,17 +1,16 @@
 ---
 
-homeassistant:
-  configuration:
-    repo: 'github.com/greenthegarden/home-assistant-configuration.git'
-  service:
-    name: home-assistant
-    ports:
-      http: 8123
-  image:
-    name:
-      linux: "homeassistant/home-assistant"
-      rpi: "homeassistant/raspberrypi3-homeassistant"
-    tag: stable
-  storage: "{{ storage_base }}/home-assistant"
-
+homeassistant_configuration_repo: 'github.com/greenthegarden/home-assistant-configuration.git'
 homeassistant_configuration_clone: yes
+
+homeassistant_service_name: home-assistant
+homeassistant_service_ports_http: 8123
+
+homeassistant_image_name_linux: "homeassistant/home-assistant"
+homeassistant_image_name_rpi: "homeassistant/raspberrypi3-homeassistant"
+homeassistant_image_tag: stable
+
+homeassistant_storage: "{{ storage_base }}/home-assistant"
+
+homeassistant_pip: homeassistant
+homeassistant_venv: homeassistant

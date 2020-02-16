@@ -1,18 +1,44 @@
 ---
 
-- hosts: hcnp-node-3
+- name: Install and configure Home Assistant
+
+  hosts: home_assistant_instances
 
   vars:
 
-    - homeassistant_configuration_clone: yes
+    packages: [
+      { name: python-apt },
+      { name: python3-dev },
+      { name: python3-pip },
+      { name: git },
+    ]
+
+    python_modules: [
+      # { name: docker },
+      { name: python-consul },
+      { name: virtualenv },
+    ]
+
+    homeassistant_configuration_clone: yes
     # TODO: check services running
-    - service_consul_running: no
+    service_consul_running: no
 
   pre_tasks:
 
-    - name: "Run pre-tasks"
+    - name: Run asserts
+      become: yes
       import_role:
-        name: pre-tasks
+        name: greenthegarden.configure-host
+        tasks_from: run-asserts
+      tags:
+        - asserts
+ 
+    - name: Install dependencies
+      import_role:
+        name: greenthegarden.configure-host
+        tasks_from: install-dependencies
+      tags:
+        - asserts
 
   vars_prompt:
 
@@ -25,7 +51,6 @@
       prompt: "What is your Github password?"
       when: homeassistant_configuration_clone
 
-  
   tasks:
 
     - import_role:
@@ -36,6 +61,6 @@
 
     - import_role:
         name: home-assistant
-        tasks_from: container.yml
+        tasks_from: pip.yml
       tags:
         - home-assistant

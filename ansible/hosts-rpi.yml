@@ -51,7 +51,7 @@ all:
     #     hcnp-node-1:
     #     hcnp-node-2:
     #     hcnp-node-3:
-      
+
     # compute_servers:
     #   hosts:
     #     hcnp-node-1:
